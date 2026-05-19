@@ -6,14 +6,14 @@
 # What this does:
 #   1. Syncs project to NAS backup folder
 #   2. Commits any uncommitted changes with a timestamped message
-#   3. Pushes to GitHub (awaizfatima08/visioncheck)
+#   3. Pushes to GitHub (AwaizFatima08/visioncheck)
 
 set -e  # Exit immediately on any error
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 PROJECT_DIR="/mnt/storage/projects/visioncheck"
 BACKUP_DIR="/mnt/storage/project_backups/visioncheck"
-GITHUB_REMOTE="https://github.com/awaizfatima08/visioncheck.git"
+GITHUB_REMOTE="https://github.com/AwaizFatima08/visioncheck.git"
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 DATE_TAG=$(date '+%Y%m%d_%H%M%S')
 
@@ -69,7 +69,7 @@ echo ""
 echo "▶ Step 3: Pushing to GitHub..."
 
 if git push origin main 2>/dev/null || git push origin master 2>/dev/null; then
-  echo "  ✓ Pushed to GitHub (awaizfatima08/visioncheck)"
+  echo "  ✓ Pushed to GitHub (AwaizFatima08/visioncheck)"
 else
   echo "  ! Push failed — check GitHub credentials or internet connection"
   echo "  ! NAS backup was still completed successfully"
@@ -80,5 +80,5 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  Backup complete — $TIMESTAMP"
 echo "  NAS:    $BACKUP_DIR"
-echo "  GitHub: https://github.com/awaizfatima08/visioncheck"
+echo "  GitHub: https://github.com/AwaizFatima08/visioncheck"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

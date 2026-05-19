@@ -8,7 +8,7 @@
 set -e
 
 PROJECT_DIR="/mnt/storage/projects/visioncheck"
-GITHUB_REMOTE="https://github.com/awaizfatima08/visioncheck.git"
+GITHUB_REMOTE="https://github.com/AwaizFatima08/visioncheck.git"
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  VisionCheck — Git Setup"
