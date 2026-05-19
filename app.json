@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "VisionCheck",
+    "slug": "visioncheck",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1A6FD4"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1A6FD4"
+      },
+      "package": "com.visioncheck.app",
+      "versionCode": 1,
+      "permissions": []
+    },
+    "plugins": [
+      "expo-sqlite",
+      "expo-speech",
+      "expo-secure-store"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "your-eas-project-id-here"
+      }
+    }
+  }
+}
