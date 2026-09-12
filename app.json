@@ -18,7 +18,8 @@
       },
       "package": "com.visioncheck.app",
       "versionCode": 2,
-      "permissions": []
+      "permissions": [],
+      "allowBackup": false
     },
     "plugins": [
       [
