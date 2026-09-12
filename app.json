@@ -2,7 +2,7 @@
   "expo": {
     "name": "VisionCheck",
     "slug": "visioncheck",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,18 +17,29 @@
         "backgroundColor": "#1A6FD4"
       },
       "package": "com.visioncheck.app",
-      "versionCode": 1,
+      "versionCode": 2,
       "permissions": []
     },
     "plugins": [
-      "expo-sqlite",
-      "expo-speech",
-      "expo-secure-store"
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "backgroundColor": "#1A6FD4",
+          "resizeMode": "contain"
+        }
+      ],
+      [
+        "expo-sqlite"
+      ],
+      "expo-sharing",
+      "expo-font"
     ],
     "extra": {
       "eas": {
-        "projectId": "your-eas-project-id-here"
+        "projectId": "c487f834-e759-4527-b293-9077e547b8d0"
       }
-    }
+    },
+    "owner": "homi55"
   }
 }

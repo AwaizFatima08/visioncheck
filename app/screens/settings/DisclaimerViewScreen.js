@@ -18,7 +18,8 @@ const DisclaimerViewScreen = ({ navigation, route }) => {
   const [language, setLanguage] = useState(route.params?.language || 'en');
 
   useEffect(() => {
-    getSetting('language').then(l => { if (l) setLanguage(l); });
+    const l = getSetting('language');
+    if (l) setLanguage(l);
   }, []);
 
   const s      = strings[language];

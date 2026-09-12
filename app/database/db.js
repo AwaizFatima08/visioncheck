@@ -1,202 +1,173 @@
 // VisionCheck — Local SQLite Database
+// SDK 55 / expo-sqlite v15 compatible
+// NEW API: openDatabaseSync + synchronous methods (no more callbacks)
 // All data stays on device — no cloud, no server
 
 import * as SQLite from 'expo-sqlite';
 
-const db = SQLite.openDatabase('visioncheck.db');
+// ─── Open database synchronously (new API) ───────────────────────────────────
+// OLD (SDK 50): SQLite.openDatabase('visioncheck.db')  ← CRASHES on Android 13+
+// NEW (SDK 55): SQLite.openDatabaseSync('visioncheck.db')  ← correct
+const db = SQLite.openDatabaseSync('visioncheck.db');
 
-// ─── Initialise all tables on first launch ──────────────────────────────────
+// ─── Initialise all tables on first launch ────────────────────────────────────
+// OLD: callback-based transactions (tx.executeSql)   ← removed in v15
+// NEW: synchronous execSync for DDL statements       ← correct
 export const initDatabase = () => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
+  try {
+    db.execSync(`
+      CREATE TABLE IF NOT EXISTS settings (
+        key   TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+      );
 
-      // Settings — language, age band, disclaimer
-      tx.executeSql(`
-        CREATE TABLE IF NOT EXISTS settings (
-          key TEXT PRIMARY KEY,
-          value TEXT NOT NULL
-        );
-      `);
+      CREATE TABLE IF NOT EXISTS assessments (
+        id             INTEGER PRIMARY KEY AUTOINCREMENT,
+        date           TEXT    NOT NULL,
+        path           TEXT    NOT NULL,
+        age_band       TEXT    NOT NULL,
+        language       TEXT    NOT NULL,
+        overall_alert  TEXT,
+        symptoms       TEXT,
+        completed      INTEGER DEFAULT 0
+      );
 
-      // Assessments — one row per full test session
-      tx.executeSql(`
-        CREATE TABLE IF NOT EXISTS assessments (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          date TEXT NOT NULL,
-          path TEXT NOT NULL,
-          age_band TEXT NOT NULL,
-          language TEXT NOT NULL,
-          overall_alert TEXT,
-          symptoms TEXT,
-          completed INTEGER DEFAULT 0
-        );
-      `);
-
-      // Test results — one row per individual test per assessment
-      tx.executeSql(`
-        CREATE TABLE IF NOT EXISTS test_results (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          assessment_id INTEGER NOT NULL,
-          test_name TEXT NOT NULL,
-          eye TEXT NOT NULL,
-          response TEXT,
-          alert_level TEXT,
-          notes TEXT,
-          FOREIGN KEY (assessment_id) REFERENCES assessments(id)
-        );
-      `);
-
-    },
-    (error) => reject(error),
-    () => resolve()
-    );
-  });
+      CREATE TABLE IF NOT EXISTS test_results (
+        id             INTEGER PRIMARY KEY AUTOINCREMENT,
+        assessment_id  INTEGER NOT NULL,
+        test_name      TEXT    NOT NULL,
+        eye            TEXT    NOT NULL,
+        response       TEXT,
+        alert_level    TEXT,
+        notes          TEXT,
+        FOREIGN KEY (assessment_id) REFERENCES assessments(id)
+      );
+    `);
+  } catch (err) {
+    console.error('initDatabase error:', err);
+    throw err;
+  }
 };
 
 // ─── Settings helpers ────────────────────────────────────────────────────────
+// OLD: db.transaction(tx => tx.executeSql(..., callback))
+// NEW: db.getFirstSync(sql, params) — returns first row or null
+
 export const getSetting = (key) => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'SELECT value FROM settings WHERE key = ?',
-        [key],
-        (_, result) => {
-          if (result.rows.length > 0) {
-            resolve(result.rows.item(0).value);
-          } else {
-            resolve(null);
-          }
-        },
-        (_, error) => reject(error)
-      );
-    });
-  });
+  try {
+    const row = db.getFirstSync(
+      'SELECT value FROM settings WHERE key = ?',
+      [key]
+    );
+    return row ? row.value : null;
+  } catch (err) {
+    console.error('getSetting error:', err);
+    return null;
+  }
 };
 
 export const setSetting = (key, value) => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
-        [key, value],
-        (_, result) => resolve(result),
-        (_, error) => reject(error)
-      );
-    });
-  });
+  try {
+    db.runSync(
+      'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+      [key, value]
+    );
+  } catch (err) {
+    console.error('setSetting error:', err);
+    throw err;
+  }
 };
 
-// ─── Assessment helpers ──────────────────────────────────────────────────────
+// ─── Assessment helpers ───────────────────────────────────────────────────────
 export const createAssessment = (path, ageBand, language, symptoms = null) => {
-  return new Promise((resolve, reject) => {
+  try {
     const date = new Date().toISOString();
-    db.transaction(tx => {
-      tx.executeSql(
-        `INSERT INTO assessments (date, path, age_band, language, symptoms, completed)
-         VALUES (?, ?, ?, ?, ?, 0)`,
-        [date, path, ageBand, language, symptoms ? JSON.stringify(symptoms) : null],
-        (_, result) => resolve(result.insertId),
-        (_, error) => reject(error)
-      );
-    });
-  });
+    const result = db.runSync(
+      `INSERT INTO assessments (date, path, age_band, language, symptoms, completed)
+       VALUES (?, ?, ?, ?, ?, 0)`,
+      [date, path, ageBand, language, symptoms ? JSON.stringify(symptoms) : null]
+    );
+    return result.lastInsertRowId;
+  } catch (err) {
+    console.error('createAssessment error:', err);
+    throw err;
+  }
 };
 
 export const completeAssessment = (assessmentId, overallAlert) => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'UPDATE assessments SET overall_alert = ?, completed = 1 WHERE id = ?',
-        [overallAlert, assessmentId],
-        (_, result) => resolve(result),
-        (_, error) => reject(error)
-      );
-    });
-  });
+  try {
+    db.runSync(
+      'UPDATE assessments SET overall_alert = ?, completed = 1 WHERE id = ?',
+      [overallAlert, assessmentId]
+    );
+  } catch (err) {
+    console.error('completeAssessment error:', err);
+    throw err;
+  }
 };
 
+// NEW: db.getAllSync(sql, params) — returns array of rows
 export const getAllAssessments = () => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'SELECT * FROM assessments WHERE completed = 1 ORDER BY date DESC',
-        [],
-        (_, result) => {
-          const rows = [];
-          for (let i = 0; i < result.rows.length; i++) {
-            rows.push(result.rows.item(i));
-          }
-          resolve(rows);
-        },
-        (_, error) => reject(error)
-      );
-    });
-  });
+  try {
+    return db.getAllSync(
+      'SELECT * FROM assessments WHERE completed = 1 ORDER BY date DESC',
+      []
+    );
+  } catch (err) {
+    console.error('getAllAssessments error:', err);
+    return [];
+  }
 };
 
 export const getAssessmentById = (id) => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'SELECT * FROM assessments WHERE id = ?',
-        [id],
-        (_, result) => {
-          if (result.rows.length > 0) {
-            resolve(result.rows.item(0));
-          } else {
-            resolve(null);
-          }
-        },
-        (_, error) => reject(error)
-      );
-    });
-  });
+  try {
+    return db.getFirstSync(
+      'SELECT * FROM assessments WHERE id = ?',
+      [id]
+    );
+  } catch (err) {
+    console.error('getAssessmentById error:', err);
+    return null;
+  }
 };
 
 export const clearAllHistory = () => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql('DELETE FROM test_results', []);
-      tx.executeSql('DELETE FROM assessments', [],
-        (_, result) => resolve(result),
-        (_, error) => reject(error)
-      );
-    });
-  });
+  try {
+    db.execSync(`
+      DELETE FROM test_results;
+      DELETE FROM assessments;
+    `);
+  } catch (err) {
+    console.error('clearAllHistory error:', err);
+    throw err;
+  }
 };
 
-// ─── Test result helpers ─────────────────────────────────────────────────────
+// ─── Test result helpers ──────────────────────────────────────────────────────
 export const saveTestResult = (assessmentId, testName, eye, response, alertLevel, notes = null) => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        `INSERT INTO test_results (assessment_id, test_name, eye, response, alert_level, notes)
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [assessmentId, testName, eye, response, alertLevel, notes],
-        (_, result) => resolve(result.insertId),
-        (_, error) => reject(error)
-      );
-    });
-  });
+  try {
+    const result = db.runSync(
+      `INSERT INTO test_results (assessment_id, test_name, eye, response, alert_level, notes)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [assessmentId, testName, eye, response, alertLevel, notes]
+    );
+    return result.lastInsertRowId;
+  } catch (err) {
+    console.error('saveTestResult error:', err);
+    throw err;
+  }
 };
 
 export const getTestResultsForAssessment = (assessmentId) => {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'SELECT * FROM test_results WHERE assessment_id = ? ORDER BY id ASC',
-        [assessmentId],
-        (_, result) => {
-          const rows = [];
-          for (let i = 0; i < result.rows.length; i++) {
-            rows.push(result.rows.item(i));
-          }
-          resolve(rows);
-        },
-        (_, error) => reject(error)
-      );
-    });
-  });
+  try {
+    return db.getAllSync(
+      'SELECT * FROM test_results WHERE assessment_id = ? ORDER BY id ASC',
+      [assessmentId]
+    );
+  } catch (err) {
+    console.error('getTestResultsForAssessment error:', err);
+    return [];
+  }
 };
 
 export default db;

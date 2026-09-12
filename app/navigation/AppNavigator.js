@@ -1,61 +1,64 @@
 // VisionCheck — Navigation
-// React Navigation setup for all screens
+// app/navigation/AppNavigator.js
+// Updated import paths matching actual folder structure
 
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
-import { colors } from '../components/ui';
 
-// Screens — Sprint 1
-import SplashScreen from '../screens/SplashScreen';
-import LanguageSelectScreen from '../screens/LanguageSelectScreen';
-import DisclaimerScreen from '../screens/DisclaimerScreen';
-import AgeBandScreen from '../screens/AgeBandScreen';
-import HomeScreen from '../screens/HomeScreen';
-import SymptomSelectorScreen from '../screens/SymptomSelectorScreen';
-import RecommendedTestsScreen from '../screens/RecommendedTestsScreen';
-import PreTestSetupScreen from '../screens/PreTestSetupScreen';
-import HistoryScreen from '../screens/HistoryScreen';
-import HistoryDetailScreen from '../screens/HistoryDetailScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import DisclaimerViewScreen from '../screens/DisclaimerViewScreen';
+// ─── Onboarding screens ───────────────────────────────────────────────────────
+import SplashScreen         from '../screens/onboarding/SplashScreen';
+import LanguageSelectScreen from '../screens/onboarding/LanguageSelectScreen';
+import DisclaimerScreen     from '../screens/onboarding/DisclaimerScreen';
 
-// Test screens — Sprint 2 onwards (placeholders for now)
-import TestDistanceScreen from '../screens/tests/TestDistanceScreen';
-import TestNearScreen from '../screens/tests/TestNearScreen';
+// ─── Home screens ─────────────────────────────────────────────────────────────
+import HomeScreen            from '../screens/home/HomeScreen';
+import AgeBandScreen         from '../screens/home/AgeBandScreen';
+import SymptomSelectorScreen from '../screens/home/SymptomSelectorScreen';
+import RecommendedTestsScreen from '../screens/home/RecommendedTestsScreen';
+import PreTestSetupScreen    from '../screens/home/PreTestSetupScreen';
+
+// ─── Test screens ─────────────────────────────────────────────────────────────
+import TestDistanceScreen    from '../screens/tests/TestDistanceScreen';
+import TestNearScreen        from '../screens/tests/TestNearScreen';
 import TestAstigmatismScreen from '../screens/tests/TestAstigmatismScreen';
-import TestContrastScreen from '../screens/tests/TestContrastScreen';
-import TestAmslerScreen from '../screens/tests/TestAmslerScreen';
-import TestColorScreen from '../screens/tests/TestColorScreen';
-import TestResultScreen from '../screens/tests/TestResultScreen';
-import FinalSummaryScreen from '../screens/FinalSummaryScreen';
+import TestContrastScreen    from '../screens/tests/TestContrastScreen';
+import TestAmslerScreen      from '../screens/tests/TestAmslerScreen';
+import TestColorScreen       from '../screens/tests/TestColorScreen';
+
+// ─── Result screens ───────────────────────────────────────────────────────────
+import TestResultScreen   from '../screens/results/TestResultScreen';
+import FinalSummaryScreen from '../screens/results/FinalSummaryScreen';
+
+// ─── History screens ──────────────────────────────────────────────────────────
+import HistoryScreen       from '../screens/history/HistoryScreen';
+import HistoryDetailScreen from '../screens/history/HistoryDetailScreen';
+
+// ─── Settings screens ─────────────────────────────────────────────────────────
+import SettingsScreen       from '../screens/settings/SettingsScreen';
+import DisclaimerViewScreen from '../screens/settings/DisclaimerViewScreen';
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+const Tab   = createBottomTabNavigator();
 
-// ─── Main Tab Navigator (shown after onboarding) ──────────────────────────────
+// ─── Main tab navigator ───────────────────────────────────────────────────────
 const MainTabs = ({ route }) => {
-  const { language } = route.params || { language: 'en' };
-
-  const tabLabels = {
-    en: { home: 'Home', history: 'History', settings: 'Settings' },
-    ur: { home: 'ہوم', history: 'تاریخ', settings: 'ترتیبات' },
-  };
-  const labels = tabLabels[language] || tabLabels.en;
+  const language = route.params?.language || 'en';
+  const isUrdu   = language === 'ur';
 
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textHint,
+        tabBarActiveTintColor:   '#1A6FD4',
+        tabBarInactiveTintColor: '#9EA3AB',
         tabBarStyle: {
-          borderTopColor: colors.border,
-          paddingBottom: 6,
-          paddingTop: 6,
-          height: 60,
+          borderTopColor: '#E2E4E8',
+          paddingBottom:  6,
+          paddingTop:     6,
+          height:         60,
         },
         tabBarLabelStyle: { fontSize: 12 },
       }}
@@ -65,8 +68,10 @@ const MainTabs = ({ route }) => {
         component={HomeScreen}
         initialParams={{ language }}
         options={{
-          tabBarLabel: labels.home,
-          tabBarIcon: ({ color, size }) => <Feather name="home" size={size} color={color} />,
+          tabBarLabel: isUrdu ? 'ہوم' : 'Home',
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="home" size={size} color={color} />
+          ),
         }}
       />
       <Tab.Screen
@@ -74,8 +79,10 @@ const MainTabs = ({ route }) => {
         component={HistoryScreen}
         initialParams={{ language }}
         options={{
-          tabBarLabel: labels.history,
-          tabBarIcon: ({ color, size }) => <Feather name="clock" size={size} color={color} />,
+          tabBarLabel: isUrdu ? 'تاریخ' : 'History',
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="clock" size={size} color={color} />
+          ),
         }}
       />
       <Tab.Screen
@@ -83,15 +90,17 @@ const MainTabs = ({ route }) => {
         component={SettingsScreen}
         initialParams={{ language }}
         options={{
-          tabBarLabel: labels.settings,
-          tabBarIcon: ({ color, size }) => <Feather name="settings" size={size} color={color} />,
+          tabBarLabel: isUrdu ? 'ترتیبات' : 'Settings',
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="settings" size={size} color={color} />
+          ),
         }}
       />
     </Tab.Navigator>
   );
 };
 
-// ─── Root Stack Navigator ─────────────────────────────────────────────────────
+// ─── Root stack navigator ─────────────────────────────────────────────────────
 const AppNavigator = () => {
   return (
     <NavigationContainer>
@@ -100,35 +109,35 @@ const AppNavigator = () => {
         screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
       >
         {/* Onboarding */}
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="LanguageSelect" component={LanguageSelectScreen} />
-        <Stack.Screen name="Disclaimer" component={DisclaimerScreen} />
+        <Stack.Screen name="Splash"          component={SplashScreen} />
+        <Stack.Screen name="LanguageSelect"  component={LanguageSelectScreen} />
+        <Stack.Screen name="Disclaimer"      component={DisclaimerScreen} />
 
-        {/* Main app */}
-        <Stack.Screen name="MainTabs" component={MainTabs} />
+        {/* Main app with tabs */}
+        <Stack.Screen name="MainTabs"        component={MainTabs} />
 
         {/* Assessment flow */}
-        <Stack.Screen name="AgeBand" component={AgeBandScreen} />
-        <Stack.Screen name="SymptomSelector" component={SymptomSelectorScreen} />
-        <Stack.Screen name="RecommendedTests" component={RecommendedTestsScreen} />
-        <Stack.Screen name="PreTestSetup" component={PreTestSetupScreen} />
+        <Stack.Screen name="AgeBand"           component={AgeBandScreen} />
+        <Stack.Screen name="SymptomSelector"   component={SymptomSelectorScreen} />
+        <Stack.Screen name="RecommendedTests"  component={RecommendedTestsScreen} />
+        <Stack.Screen name="PreTestSetup"      component={PreTestSetupScreen} />
 
-        {/* Individual tests */}
-        <Stack.Screen name="TestDistance" component={TestDistanceScreen} />
-        <Stack.Screen name="TestNear" component={TestNearScreen} />
+        {/* Tests */}
+        <Stack.Screen name="TestDistance"    component={TestDistanceScreen} />
+        <Stack.Screen name="TestNear"        component={TestNearScreen} />
         <Stack.Screen name="TestAstigmatism" component={TestAstigmatismScreen} />
-        <Stack.Screen name="TestContrast" component={TestContrastScreen} />
-        <Stack.Screen name="TestAmsler" component={TestAmslerScreen} />
-        <Stack.Screen name="TestColor" component={TestColorScreen} />
-        <Stack.Screen name="TestResult" component={TestResultScreen} />
+        <Stack.Screen name="TestContrast"    component={TestContrastScreen} />
+        <Stack.Screen name="TestAmsler"      component={TestAmslerScreen} />
+        <Stack.Screen name="TestColor"       component={TestColorScreen} />
 
-        {/* Final summary */}
-        <Stack.Screen name="FinalSummary" component={FinalSummaryScreen} />
+        {/* Results */}
+        <Stack.Screen name="TestResult"    component={TestResultScreen} />
+        <Stack.Screen name="FinalSummary"  component={FinalSummaryScreen} />
 
-        {/* History detail */}
+        {/* History */}
         <Stack.Screen name="HistoryDetail" component={HistoryDetailScreen} />
 
-        {/* Disclaimer view from settings */}
+        {/* Settings */}
         <Stack.Screen name="DisclaimerView" component={DisclaimerViewScreen} />
       </Stack.Navigator>
     </NavigationContainer>

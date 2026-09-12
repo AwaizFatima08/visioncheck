@@ -7,7 +7,11 @@ import {
   ActivityIndicator, ScrollView
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { alertColors, alertIcons, ALERT } from '../engine/testEngine';
+import { ALERT_STYLE as alertColors, ALERT } from '../engine/alertLogic';
+
+const alertIcons = Object.fromEntries(
+  Object.entries(alertColors).map(([level, style]) => [level, style.icon])
+);
 
 // ─── Colours ──────────────────────────────────────────────────────────────────
 export const colors = {

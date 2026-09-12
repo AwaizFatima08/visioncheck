@@ -23,7 +23,8 @@ const HomeScreen = ({ navigation, route }) => {
 
   useFocusEffect(
     useCallback(() => {
-      getSetting('language').then(l => { if (l) setLanguage(l); });
+      const l = getSetting('language');
+      if (l) setLanguage(l);
     }, [])
   );
 

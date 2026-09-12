@@ -22,6 +22,8 @@ const DisclaimerScreen = ({ navigation, route }) => {
   const s      = strings[language];
   const isUrdu = language === 'ur';
   const [scrolled, setScrolled] = useState(false);
+  const [scrollViewHeight, setScrollViewHeight] = useState(null);
+  const [contentHeight, setContentHeight] = useState(null);
 
   useEffect(() => {
     // Speak title then scroll prompt
@@ -30,6 +32,15 @@ const DisclaimerScreen = ({ navigation, route }) => {
     });
     return () => Speech.stop();
   }, []);
+
+  // If the disclaimer text is short enough to fit without scrolling (large
+  // screens/tablets, or short translations), there's no scroll gesture for the
+  // user to make — the agree button must unlock on its own in that case.
+  useEffect(() => {
+    if (scrollViewHeight != null && contentHeight != null && contentHeight <= scrollViewHeight + 10) {
+      setScrolled(true);
+    }
+  }, [scrollViewHeight, contentHeight]);
 
   const handleScroll = ({ nativeEvent }) => {
     const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
@@ -60,6 +71,8 @@ const DisclaimerScreen = ({ navigation, route }) => {
         onScroll={handleScroll}
         scrollEventThrottle={100}
         showsVerticalScrollIndicator
+        onLayout={({ nativeEvent }) => setScrollViewHeight(nativeEvent.layout.height)}
+        onContentSizeChange={(w, h) => setContentHeight(h)}
       >
         <Text style={[styles.body, isUrdu && styles.rtl, isUrdu && styles.urduBody]}>
           {s.disclaimer_body}
