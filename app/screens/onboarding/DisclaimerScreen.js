@@ -42,6 +42,15 @@ const DisclaimerScreen = ({ navigation, route }) => {
     }
   }, [scrollViewHeight, contentHeight]);
 
+  // Safety net: onLayout/onContentSizeChange not firing (or firing with a
+  // value that doesn't clear the check above) must never permanently trap
+  // someone on the onboarding flow. By 8s the disclaimer has been read (it's
+  // also been read aloud by the audio prompt above), so unlock regardless.
+  useEffect(() => {
+    const timer = setTimeout(() => setScrolled(true), 8000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleScroll = ({ nativeEvent }) => {
     const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
     if (layoutMeasurement.height + contentOffset.y >= contentSize.height - 30) {
