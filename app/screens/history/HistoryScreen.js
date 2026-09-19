@@ -164,8 +164,11 @@ const HistoryScreen = ({ navigation, route }) => {
 };
 
 const getAlertLabel = (alert, isUrdu) => ({
-  green:'معمول', yellow:'معمولی', red:'ڈاکٹر دیکھیں', urgent:'فوری',
-}[alert] || (isUrdu ? alert : { green:'Normal', yellow:'Mild', red:'See doctor', urgent:'Urgent' }[alert] || alert));
+  green:  isUrdu ? 'معمول'        : 'Normal',
+  yellow: isUrdu ? 'معمولی'       : 'Mild',
+  red:    isUrdu ? 'ڈاکٹر دیکھیں' : 'See doctor',
+  urgent: isUrdu ? 'فوری'         : 'Urgent',
+})[alert] || alert;
 
 const styles = StyleSheet.create({
   safe:             { flex:1, backgroundColor:'#F5F6F8' },

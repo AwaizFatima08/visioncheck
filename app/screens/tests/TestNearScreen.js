@@ -161,7 +161,7 @@ const TestNearScreen = ({ navigation, route }) => {
 
         {/* Audio replay */}
         <TouchableOpacity
-          style={styles.audioBtn}
+          style={[styles.audioBtn, { alignSelf: isUrdu ? 'flex-end' : 'flex-start' }]}
           onPress={() => {
             const p = isUrdu
               ? 'سب سے چھوٹا متن پڑھیں جو آپ کو صاف نظر آئے۔'
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
 
   currentEyeLabel: { fontSize: 14, fontWeight: '600', color: '#1A1C1E', marginBottom: 2 },
 
-  audioBtn:     { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: isUrdu => isUrdu ? 'flex-end' : 'flex-start', marginBottom: 10, paddingHorizontal: 14, paddingVertical: 7, backgroundColor: '#E8F1FB', borderRadius: 20 },
+  audioBtn:     { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 10, paddingHorizontal: 14, paddingVertical: 7, backgroundColor: '#E8F1FB', borderRadius: 20 },
   audioBtnText: { fontSize: 13, color: '#1A6FD4', fontWeight: '500' },
 
   responsePrompt: { fontSize: 14, fontWeight: '500', color: '#1A1C1E', marginBottom: 8 },

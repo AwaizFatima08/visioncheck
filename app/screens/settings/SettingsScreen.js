@@ -12,11 +12,14 @@ import {
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import * as Speech from 'expo-speech';
+import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
 import { getSetting, setSetting, clearAllHistory } from '../../database/db';
 import { strings } from '../../i18n/strings';
 
-const APP_VERSION = '1.0.0';
+// Read from app.json (the single source of truth for the shipped version)
+// instead of a hardcoded string that silently drifts out of sync with it.
+const APP_VERSION = Constants.expoConfig?.version || '1.0.0';
 
 const speak = (text, lang, onDone) => {
   Speech.stop();

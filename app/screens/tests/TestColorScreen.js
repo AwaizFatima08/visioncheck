@@ -5,7 +5,7 @@
 // User selects which number they see, or "no number".
 // Score tallied across all 3 plates.
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView,
 } from 'react-native';
@@ -74,7 +74,10 @@ const TestColorScreen = ({ navigation, route }) => {
     }
   };
 
-  const options = getOptions(currentPlate);
+  // Shuffled once per plate, not on every render — otherwise the answer
+  // buttons visibly reorder themselves on any unrelated re-render while
+  // the user is still looking at them.
+  const options = useMemo(() => getOptions(currentPlate), [plateIndex]);
 
   return (
     <SafeAreaView style={styles.safe}>
