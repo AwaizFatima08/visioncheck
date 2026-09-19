@@ -1,7 +1,61 @@
 # Pre-launch test report — VisionCheck v1.0.1
 
-Last updated after: SDK 55 upgrade fixes, colour-plate fix, Urdu font fix.
-Latest commit tested against: `fc784ad` (Urdu font fix).
+Last updated after: SDK 55 upgrade fixes, colour-plate fix, Urdu font fix,
+and a full line-by-line debug pass of every remaining file.
+Latest commit tested against: `e431a04` (full debug pass).
+
+## Full debug pass (this update)
+
+Read every file in `app/` that a prior pass hadn't already covered line by
+line — all 6 test screens in full, every chart component, both history
+screens, settings, the hooks/ and constants/ directories, dateFormatter.js,
+shareResults.js — then walked the complete Distance → Near → Astigmatism →
+Contrast → Amsler → Color → Final Summary chain live (Astigmatism, Contrast,
+and Amsler had never been exercised dynamically before this pass), checking
+the console for errors at each step.
+
+Four real bugs found and fixed, none of them crashes (which is why static
+review across everything, not just re-checking prior fixes, was worth
+doing):
+- An `alignSelf` style value in TestNearScreen.js was accidentally set to a
+  function (`isUrdu => isUrdu ? 'flex-end' : 'flex-start'`) instead of a
+  resolved string — `StyleSheet.create` doesn't invoke functions, so this
+  was a silent no-op; the audio-replay button just never got its intended
+  RTL-mirrored position.
+- History screen's alert-level label ("Normal" / "Mild" / etc.) had inverted
+  fallback logic that made it display in Urdu *regardless of the selected
+  language* — the English-mode history list was showing Urdu pill text on
+  every row. Confirmed live: before the fix, an English-language row showed
+  "معمول"; after, it correctly shows "Normal".
+- Settings screen's version number was hardcoded to "1.0.0", silently out
+  of sync with the real "1.0.1" in app.json. Now reads
+  `Constants.expoConfig.version` (added `expo-constants` as an explicit
+  dependency) so this can't drift again.
+- The colour-vision test's shuffled answer-button order was recomputed on
+  every render instead of once per plate, so any unrelated re-render while
+  a plate was on screen would silently reshuffle the buttons under the
+  user's finger. Memoized on plate index.
+
+Also removed 6 more files confirmed to be empty, unimported scaffolding
+(`app/hooks/*`, `app/constants/*`) — same category as the earlier
+ui.js/testEngine.js cleanup.
+
+**One significant finding not fixed, flagged for a decision rather than
+changed unilaterally**: `TestResultScreen.js` — a fully-built screen with
+plain-language, per-alert-level explanations for every test ("You could
+only read larger letters... this suggests possible short-sightedness...")
+— is registered in the navigator but **no test screen ever navigates to
+it**. All 6 test screens skip directly from one test to the next (or to
+Final Summary), so this entire explanation screen is dead code from a
+navigation standpoint, and users never see the detailed "why" behind an
+individual test result — only the aggregate alert level in the final
+summary. This matches the app's own documented navigation diagram
+(`docs/blueprint.md`), which shows an "Individual Result" step after each
+test, so it reads as an oversight rather than intentional simplification —
+but re-inserting it changes the test-taking flow (an extra screen/tap after
+every test) and touches all 6 test screens' navigation calls, so it's a
+product decision, not just a bug fix. Recommend discussing directly with
+the user before touching it.
 
 Scope note up front: VisionCheck has **no backend, no API, and no login** —
 confirmed by grepping the entire codebase for `fetch`/`axios`/`XMLHttpRequest`
