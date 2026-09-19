@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#9EA3AB',
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: 'center', fontFamily: 'NotoNastaliqUrdu',
   },
   row: {
     marginVertical: 8,

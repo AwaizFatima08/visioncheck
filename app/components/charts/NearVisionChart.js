@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
   rtl: {
     textAlign: 'right',
     writingDirection: 'rtl',
+    fontFamily: 'NotoNastaliqUrdu',
   },
   row: {
     marginVertical: 5,
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
   urduText: {
     textAlign: 'right',
     writingDirection: 'rtl',
-    fontFamily: 'System', // uses device Urdu font
+    fontFamily: 'NotoNastaliqUrdu',
   },
 });
 

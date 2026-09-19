@@ -93,7 +93,7 @@ const TestColorScreen = ({ navigation, route }) => {
         {/* Both eyes open */}
         <View style={styles.bothEyesBadge}>
           <Feather name="eye" size={16} color="#3B6D11" />
-          <Text style={styles.bothEyesText}>
+          <Text style={[styles.bothEyesText, isUrdu && styles.rtl]}>
             {isUrdu ? 'دونوں آنکھیں کھلی رکھیں' : 'Keep BOTH eyes open'}
           </Text>
         </View>
@@ -145,7 +145,7 @@ const TestColorScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#F5F6F8' },
   content: { padding: 20, paddingTop: 16 },
-  rtl: { textAlign: 'right', writingDirection: 'rtl' },
+  rtl: { textAlign: 'right', writingDirection: 'rtl', fontFamily: 'NotoNastaliqUrdu' },
   progressRow: { flexDirection: 'row', gap: 5, marginBottom: 16 },
   progressDot: { flex: 1, height: 3, borderRadius: 2, backgroundColor: '#E2E4E8' },
   progressDone: { backgroundColor: '#3B6D11' },

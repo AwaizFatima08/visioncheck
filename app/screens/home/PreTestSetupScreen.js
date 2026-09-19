@@ -123,7 +123,7 @@ const PreTestSetupScreen = ({ navigation, route }) => {
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.readyBtn} onPress={proceed} activeOpacity={0.85}>
           <Text style={styles.readyIcon}>▶</Text>
-          <Text style={styles.readyBtnText}>{s.setup_ready}</Text>
+          <Text style={[styles.readyBtnText, isUrdu && styles.rtl]}>{s.setup_ready}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -133,7 +133,7 @@ const PreTestSetupScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   safe:       { flex:1, backgroundColor:'#F5F6F8' },
   content:    { padding:20, paddingTop:16 },
-  rtl:        { textAlign:'right', writingDirection:'rtl' },
+  rtl:        { textAlign:'right', writingDirection:'rtl', fontFamily: 'NotoNastaliqUrdu' },
   headerRow:  { flexDirection:'row', alignItems:'center', gap:10, marginTop:28, marginBottom:20 },
   title:      { flex:1, fontSize:20, fontWeight:'700', color:'#1A1C1E' },
   audioBtn:   { padding:4 },

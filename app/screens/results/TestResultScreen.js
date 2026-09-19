@@ -247,14 +247,14 @@ const TestResultScreen = ({ navigation, route }) => {
           onPress={() => speakPrompt(explanation.title + '. ' + explanation.body, language)}
         >
           <Feather name="volume-2" size={16} color="#1A6FD4" />
-          <Text style={styles.audioBtnText}>
+          <Text style={[styles.audioBtnText, isUrdu && styles.rtl]}>
             {isUrdu ? 'دوبارہ سنیں' : 'Replay result'}
           </Text>
         </TouchableOpacity>
 
         {/* Next button */}
         <TouchableOpacity style={styles.nextBtn} onPress={handleNext} activeOpacity={0.85}>
-          <Text style={styles.nextBtnText}>
+          <Text style={[styles.nextBtnText, isUrdu && styles.rtl]}>
             {nextTest
               ? (isUrdu ? 'اگلا ٹیسٹ ←' : 'Next test →')
               : (isUrdu ? 'حتمی نتائج دیکھیں ←' : 'View final summary →')}
@@ -300,7 +300,7 @@ const eyeRowStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   safe:    { flex: 1, backgroundColor: '#F5F6F8' },
   content: { padding: 20, paddingTop: 16 },
-  rtl:     { textAlign: 'right', writingDirection: 'rtl' },
+  rtl:     { textAlign: 'right', writingDirection: 'rtl', fontFamily: 'NotoNastaliqUrdu' },
 
   progressRow:     { flexDirection: 'row', gap: 5, marginBottom: 16 },
   progressDot:     { flex: 1, height: 3, borderRadius: 2, backgroundColor: '#E2E4E8' },

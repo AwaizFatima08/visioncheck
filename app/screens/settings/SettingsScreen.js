@@ -218,7 +218,7 @@ const SettingsScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   safe:               { flex:1, backgroundColor:'#F5F6F8' },
   content:            { padding:20, paddingTop:24 },
-  rtl:                { textAlign:'right', writingDirection:'rtl' },
+  rtl:                { textAlign:'right', writingDirection:'rtl', fontFamily: 'NotoNastaliqUrdu' },
   headingRow:         { flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginBottom:20 },
   heading:            { fontSize:24, fontWeight:'800', color:'#1A1C1E' },
   audioBtn:           { padding:6 },
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   guestText:          { flex:1, fontSize:12, color:'#5A5D63', lineHeight:18 },
   footer:             { alignItems:'center', marginTop:28, paddingTop:20, borderTopWidth:1, borderTopColor:'#E2E4E8' },
   footerApp:          { fontSize:16, fontWeight:'800', color:'#1A6FD4' },
-  footerUrdu:         { fontSize:13, color:'#9EA3AB', marginTop:2 },
+  footerUrdu:         { fontSize:13, color:'#9EA3AB', marginTop:2, fontFamily:'NotoNastaliqUrdu' },
   footerNote:         { fontSize:11, color:'#C0C3CA', marginTop:6 },
 });
 

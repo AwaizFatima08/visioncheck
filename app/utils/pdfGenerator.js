@@ -6,7 +6,25 @@
 // Bilingual: English and Urdu content based on language param.
 
 import * as Print from 'expo-print';
+import * as FileSystem from 'expo-file-system';
+import { Asset } from 'expo-asset';
 import { ALERT } from '../engine/alertLogic';
+
+// expo-print's PDF renderer only has access to fonts actually reachable from
+// the HTML it's given — a font-family name alone (even a real one) resolves
+// to nothing unless the device happens to ship it, which is not something to
+// rely on for Urdu script. Embedding the same bundled font used by the app's
+// own screens as a data: URI guarantees the PDF renders identically.
+let cachedUrduFontBase64 = null;
+const getUrduFontBase64 = async () => {
+  if (cachedUrduFontBase64) return cachedUrduFontBase64;
+  const asset = Asset.fromModule(require('../../assets/fonts/NotoNastaliqUrdu.ttf'));
+  await asset.downloadAsync();
+  cachedUrduFontBase64 = await FileSystem.readAsStringAsync(asset.localUri, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
+  return cachedUrduFontBase64;
+};
 
 // ─── Alert colours for HTML ───────────────────────────────────────────────────
 const ALERT_CSS = {
@@ -100,7 +118,7 @@ const buildTestRows = (assessmentResults, language) => {
 };
 
 // ─── Main HTML template ───────────────────────────────────────────────────────
-const buildHTML = (assessmentResults, overallAlert, language, ageBand) => {
+const buildHTML = (assessmentResults, overallAlert, language, ageBand, urduFontBase64) => {
   const isUrdu      = language === 'ur';
   const dir         = isUrdu ? 'rtl' : 'ltr';
   const cs          = ALERT_CSS[overallAlert];
@@ -117,8 +135,15 @@ const buildHTML = (assessmentResults, overallAlert, language, ageBand) => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    ${isUrdu && urduFontBase64 ? `
+    @font-face {
+      font-family: 'NotoNastaliqUrdu';
+      src: url(data:font/ttf;base64,${urduFontBase64}) format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }` : ''}
     body {
-      font-family: ${isUrdu ? "'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', Arial" : "Arial, sans-serif"};
+      font-family: ${isUrdu ? "'NotoNastaliqUrdu', Arial" : "Arial, sans-serif"};
       font-size: 13px;
       color: #1A1C1E;
       background: #fff;
@@ -216,7 +241,15 @@ const buildHTML = (assessmentResults, overallAlert, language, ageBand) => {
  * @returns {Promise<string>} URI of generated PDF file
  */
 export const generatePDF = async (assessmentResults, overallAlert, language, ageBand) => {
-  const html = buildHTML(assessmentResults, overallAlert, language, ageBand);
+  let urduFontBase64 = null;
+  if (language === 'ur') {
+    try {
+      urduFontBase64 = await getUrduFontBase64();
+    } catch (err) {
+      console.error('Urdu font load error (PDF will fall back to system font):', err);
+    }
+  }
+  const html = buildHTML(assessmentResults, overallAlert, language, ageBand, urduFontBase64);
   const { uri } = await Print.printToFileAsync({ html, base64: false });
   return uri;
 };

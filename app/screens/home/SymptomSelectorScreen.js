@@ -117,7 +117,7 @@ const SymptomSelectorScreen = ({ navigation, route }) => {
       {/* Bottom bar */}
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.confirmBtn} onPress={proceed} activeOpacity={0.85}>
-          <Text style={styles.confirmBtnText}>{s.symptom_confirm}</Text>
+          <Text style={[styles.confirmBtnText, isUrdu && styles.rtl]}>{s.symptom_confirm}</Text>
           {selected.length > 0 && (
             <View style={styles.countBadge}>
               <Text style={styles.countBadgeText}>{selected.length}</Text>
@@ -132,7 +132,7 @@ const SymptomSelectorScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   safe:             { flex:1, backgroundColor:'#F5F6F8' },
   content:          { padding:20, paddingTop:16 },
-  rtl:              { textAlign:'right', writingDirection:'rtl' },
+  rtl:              { textAlign:'right', writingDirection:'rtl', fontFamily: 'NotoNastaliqUrdu' },
   headerRow:        { flexDirection:'row', alignItems:'flex-start', gap:10, marginTop:28, marginBottom:16 },
   headerText:       { flex:1 },
   title:            { fontSize:20, fontWeight:'700', color:'#1A1C1E' },

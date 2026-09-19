@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#9EA3AB',
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: 'center', fontFamily: 'NotoNastaliqUrdu',
   },
   chartWrap: {
     alignItems: 'center',

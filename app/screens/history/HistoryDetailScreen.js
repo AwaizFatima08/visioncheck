@@ -106,7 +106,7 @@ const HistoryDetailScreen = ({ navigation, route }) => {
       <SafeAreaView style={styles.safe}>
         <View style={styles.loadingWrap}>
           <ActivityIndicator size="large" color="#1A6FD4" />
-          <Text style={styles.loadingText}>
+          <Text style={[styles.loadingText, isUrdu && styles.rtl]}>
             {isUrdu ? 'لوڈ ہو رہا ہے...' : 'Loading...'}
           </Text>
         </View>
@@ -118,7 +118,7 @@ const HistoryDetailScreen = ({ navigation, route }) => {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.loadingWrap}>
-          <Text style={styles.loadingText}>
+          <Text style={[styles.loadingText, isUrdu && styles.rtl]}>
             {isUrdu ? 'نتائج نہیں ملے' : 'Assessment not found'}
           </Text>
         </View>
@@ -152,7 +152,7 @@ const HistoryDetailScreen = ({ navigation, route }) => {
             size={22}
             color="#1A6FD4"
           />
-          <Text style={styles.backBtnText}>
+          <Text style={[styles.backBtnText, isUrdu && styles.rtl]}>
             {isUrdu ? 'واپس' : 'Back'}
           </Text>
         </TouchableOpacity>
@@ -165,13 +165,13 @@ const HistoryDetailScreen = ({ navigation, route }) => {
         <View style={styles.metaRow}>
           <View style={styles.metaChip}>
             <Feather name="user" size={12} color="#9EA3AB" />
-            <Text style={styles.metaChipText}>
+            <Text style={[styles.metaChipText, isUrdu && styles.rtl]}>
               {ageBandLabel(assessment.age_band, language)}
             </Text>
           </View>
           <View style={styles.metaChip}>
             <Feather name="globe" size={12} color="#9EA3AB" />
-            <Text style={styles.metaChipText}>
+            <Text style={[styles.metaChipText, assessment.language === 'ur' && { fontFamily: 'NotoNastaliqUrdu' }]}>
               {assessment.language === 'ur' ? 'اردو' : 'English'}
             </Text>
           </View>
@@ -257,7 +257,7 @@ const HistoryDetailScreen = ({ navigation, route }) => {
             ? <ActivityIndicator color="#fff" size="small" />
             : <>
                 <Text style={styles.btnIcon}>📄</Text>
-                <Text style={styles.primaryBtnText}>
+                <Text style={[styles.primaryBtnText, isUrdu && styles.rtl]}>
                   {isUrdu ? 'PDF ڈاؤن لوڈ کریں' : 'Download PDF'}
                 </Text>
               </>
@@ -271,7 +271,7 @@ const HistoryDetailScreen = ({ navigation, route }) => {
           activeOpacity={0.85}
         >
           <Text style={styles.btnIcon}>📱</Text>
-          <Text style={styles.secondaryBtnText}>
+          <Text style={[styles.secondaryBtnText, isUrdu && styles.rtl]}>
             {isUrdu ? 'واٹس ایپ پر شیئر کریں' : 'Share via WhatsApp'}
           </Text>
         </TouchableOpacity>
@@ -307,7 +307,7 @@ const getAlertLabel = (alert, isUrdu) => ({
 const styles = StyleSheet.create({
   safe:    { flex: 1, backgroundColor: '#F5F6F8' },
   content: { padding: 20, paddingTop: 12 },
-  rtl:     { textAlign: 'right', writingDirection: 'rtl' },
+  rtl:     { textAlign: 'right', writingDirection: 'rtl', fontFamily: 'NotoNastaliqUrdu' },
 
   loadingWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
   loadingText: { fontSize: 14, color: '#9EA3AB' },

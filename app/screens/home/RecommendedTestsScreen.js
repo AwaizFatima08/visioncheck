@@ -103,7 +103,7 @@ const RecommendedTestsScreen = ({ navigation, route }) => {
 
         <View style={styles.actions}>
           <TouchableOpacity style={styles.primaryBtn} onPress={startRecommended} activeOpacity={0.85}>
-            <Text style={styles.primaryBtnText}>{s.recommended_start}</Text>
+            <Text style={[styles.primaryBtnText, isUrdu && styles.rtl]}>{s.recommended_start}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.secondaryBtn} onPress={startAll} activeOpacity={0.8}>
@@ -120,7 +120,7 @@ const RecommendedTestsScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   safe:           { flex:1, backgroundColor:'#F5F6F8' },
   content:        { padding:20, paddingTop:16 },
-  rtl:            { textAlign:'right', writingDirection:'rtl' },
+  rtl:            { textAlign:'right', writingDirection:'rtl', fontFamily: 'NotoNastaliqUrdu' },
   headerRow:      { flexDirection:'row', alignItems:'flex-start', gap:10, marginTop:28, marginBottom:16 },
   headerText:     { flex:1 },
   title:          { fontSize:20, fontWeight:'700', color:'#1A1C1E' },

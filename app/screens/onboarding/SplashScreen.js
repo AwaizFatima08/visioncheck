@@ -40,9 +40,9 @@ const s = StyleSheet.create({
   container: { flex:1, backgroundColor:'#1A6FD4', alignItems:'center', justifyContent:'center', padding:32 },
   iconWrap:  { width:100, height:100, borderRadius:28, backgroundColor:'rgba(255,255,255,0.18)', alignItems:'center', justifyContent:'center', marginBottom:24 },
   appName:   { fontSize:34, fontWeight:'800', color:'#fff', letterSpacing:0.5 },
-  urduLabel: { fontSize:22, color:'rgba(255,255,255,0.85)', marginTop:6, marginBottom:16 },
+  urduLabel: { fontSize:22, color:'rgba(255,255,255,0.85)', marginTop:6, marginBottom:16, fontFamily:'NotoNastaliqUrdu' },
   tagline:   { fontSize:13, color:'rgba(255,255,255,0.65)', textAlign:'center' },
-  taglineUr: { fontSize:13, color:'rgba(255,255,255,0.55)', textAlign:'center', marginTop:4 },
+  taglineUr: { fontSize:13, color:'rgba(255,255,255,0.55)', textAlign:'center', marginTop:4, fontFamily:'NotoNastaliqUrdu' },
 });
 
 export default SplashScreen;

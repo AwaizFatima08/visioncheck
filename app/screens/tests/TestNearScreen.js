@@ -133,7 +133,7 @@ const TestNearScreen = ({ navigation, route }) => {
         {/* Distance badge */}
         <View style={styles.distanceBadge}>
           <Text style={styles.badgeIcon}>📱</Text>
-          <Text style={styles.distanceText}>
+          <Text style={[styles.distanceText, isUrdu && styles.rtl]}>
             {isUrdu ? 'پڑھنے کی دوری — ۳۰ سینٹی میٹر' : 'Reading distance — 30 cm'}
           </Text>
         </View>
@@ -170,7 +170,7 @@ const TestNearScreen = ({ navigation, route }) => {
           }}
         >
           <Feather name="volume-2" size={16} color="#1A6FD4" />
-          <Text style={styles.audioBtnText}>
+          <Text style={[styles.audioBtnText, isUrdu && styles.rtl]}>
             {isUrdu ? 'دوبارہ سنیں' : 'Replay audio'}
           </Text>
         </TouchableOpacity>
@@ -207,7 +207,7 @@ const TestNearScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   safe:    { flex: 1, backgroundColor: '#F5F6F8' },
   content: { padding: 20, paddingTop: 16 },
-  rtl:     { textAlign: 'right', writingDirection: 'rtl' },
+  rtl:     { textAlign: 'right', writingDirection: 'rtl', fontFamily: 'NotoNastaliqUrdu' },
 
   progressRow:     { flexDirection: 'row', gap: 5, marginBottom: 14 },
   progressDot:     { flex: 1, height: 3, borderRadius: 2, backgroundColor: '#E2E4E8' },

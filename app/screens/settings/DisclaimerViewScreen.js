@@ -156,7 +156,7 @@ const getDisclaimerParagraphs = (language) => {
 
 const styles = StyleSheet.create({
   safe:    { flex: 1, backgroundColor: '#F5F6F8' },
-  rtl:     { textAlign: 'right', writingDirection: 'rtl' },
+  rtl:     { textAlign: 'right', writingDirection: 'rtl', fontFamily: 'NotoNastaliqUrdu' },
 
   header:  { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingTop: 16, paddingBottom: 12 },
   backBtn: { padding: 6 },
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
 
   appBlock: { alignItems: 'center', paddingVertical: 20, borderBottomWidth: 1, borderBottomColor: '#E2E4E8', marginBottom: 20 },
   appName:  { fontSize: 22, fontWeight: '800', color: '#1A6FD4' },
-  appUrdu:  { fontSize: 16, color: '#9EA3AB', marginTop: 4 },
+  appUrdu:  { fontSize: 16, color: '#9EA3AB', marginTop: 4, fontFamily: 'NotoNastaliqUrdu' },
 
   paraBlock: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, marginBottom: 20 },
   paraIcon:  { fontSize: 22, width: 32, textAlign: 'center', marginTop: 2 },

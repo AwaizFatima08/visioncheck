@@ -125,7 +125,7 @@ const FinalSummaryScreen = ({ navigation, route }) => {
         {saving && (
           <View style={styles.savingRow}>
             <ActivityIndicator size="small" color="#1A6FD4" />
-            <Text style={styles.savingText}>
+            <Text style={[styles.savingText, isUrdu && styles.rtl]}>
               {isUrdu ? 'نتائج محفوظ ہو رہے ہیں...' : 'Saving results...'}
             </Text>
           </View>
@@ -198,7 +198,7 @@ const FinalSummaryScreen = ({ navigation, route }) => {
             ? <ActivityIndicator color="#fff" size="small" />
             : <>
                 <Text style={styles.btnIcon}>📄</Text>
-                <Text style={styles.primaryBtnText}>
+                <Text style={[styles.primaryBtnText, isUrdu && styles.rtl]}>
                   {isUrdu ? 'PDF ڈاؤن لوڈ کریں' : 'Download PDF'}
                 </Text>
               </>
@@ -212,7 +212,7 @@ const FinalSummaryScreen = ({ navigation, route }) => {
           activeOpacity={0.85}
         >
           <Text style={styles.btnIcon}>📱</Text>
-          <Text style={styles.secondaryBtnText}>
+          <Text style={[styles.secondaryBtnText, isUrdu && styles.rtl]}>
             {isUrdu ? 'واٹس ایپ پر شیئر کریں' : 'Share via WhatsApp'}
           </Text>
         </TouchableOpacity>
@@ -223,7 +223,7 @@ const FinalSummaryScreen = ({ navigation, route }) => {
           onPress={() => speakPrompt(nextStepText, language)}
         >
           <Feather name="volume-2" size={16} color="#1A6FD4" />
-          <Text style={styles.audioBtnText}>
+          <Text style={[styles.audioBtnText, isUrdu && styles.rtl]}>
             {isUrdu ? 'دوبارہ سنیں' : 'Replay summary'}
           </Text>
         </TouchableOpacity>
@@ -231,7 +231,7 @@ const FinalSummaryScreen = ({ navigation, route }) => {
         {/* Retake */}
         <TouchableOpacity style={styles.retakeBtn} onPress={handleRetake} activeOpacity={0.8}>
           <Feather name="refresh-cw" size={16} color="#5A5D63" />
-          <Text style={styles.retakeBtnText}>
+          <Text style={[styles.retakeBtnText, isUrdu && styles.rtl]}>
             {isUrdu ? 'دوبارہ ٹیسٹ دیں' : 'Take tests again'}
           </Text>
         </TouchableOpacity>
@@ -276,7 +276,7 @@ const getAlertLabel = (alert, isUrdu) => ({
 const styles = StyleSheet.create({
   safe:    { flex: 1, backgroundColor: '#F5F6F8' },
   content: { padding: 20, paddingTop: 24 },
-  rtl:     { textAlign: 'right', writingDirection: 'rtl' },
+  rtl:     { textAlign: 'right', writingDirection: 'rtl', fontFamily: 'NotoNastaliqUrdu' },
 
   heading:    { fontSize: 24, fontWeight: '800', color: '#1A1C1E', marginBottom: 16 },
 

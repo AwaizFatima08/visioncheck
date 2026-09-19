@@ -160,7 +160,7 @@ const TestDistanceScreen = ({ navigation, route }) => {
       {/* Distance badge */}
       <View style={styles.distanceBadge}>
         <Text style={styles.badgeIcon}>📱</Text>
-        <Text style={styles.distanceText}>
+        <Text style={[styles.distanceText, isUrdu && styles.rtl]}>
           {isUrdu ? 'فون کو بازو کی لمبائی پر رکھیں — ۴۰ سینٹی میٹر' : 'Arm\'s length — 40 cm'}
         </Text>
       </View>
@@ -181,7 +181,7 @@ const TestDistanceScreen = ({ navigation, route }) => {
       {/* Feedback flash */}
       {feedback && (
         <View style={[styles.feedbackBadge, feedback === 'correct' ? styles.feedbackOk : styles.feedbackWrong]}>
-          <Text style={styles.feedbackText}>
+          <Text style={[styles.feedbackText, isUrdu && styles.rtl]}>
             {feedback === 'correct'
               ? (isUrdu ? '✓ درست' : '✓ Correct')
               : (isUrdu ? '↩ اگلا' : '↩ Moving on')}
@@ -219,7 +219,7 @@ const TestDistanceScreen = ({ navigation, route }) => {
       {/* Audio replay button */}
       <TouchableOpacity style={styles.audioBtn} onPress={() => speakEPrompt(language)}>
         <Feather name="volume-2" size={18} color="#1A6FD4" />
-        <Text style={styles.audioBtnText}>
+        <Text style={[styles.audioBtnText, isUrdu && styles.rtl]}>
           {isUrdu ? 'دوبارہ سنیں' : 'Replay audio'}
         </Text>
       </TouchableOpacity>
@@ -247,7 +247,7 @@ const DirectionBtn = ({ rotation, isUrdu, onPress }) => {
 
 const styles = StyleSheet.create({
   safe:    { flex: 1, backgroundColor: '#F5F6F8', padding: 16, paddingTop: 20 },
-  rtl:     { textAlign: 'right', writingDirection: 'rtl' },
+  rtl:     { textAlign: 'right', writingDirection: 'rtl', fontFamily: 'NotoNastaliqUrdu' },
 
   progressRow:     { flexDirection: 'row', gap: 5, marginBottom: 14 },
   progressDot:     { flex: 1, height: 3, borderRadius: 2, backgroundColor: '#E2E4E8' },

@@ -89,7 +89,7 @@ const AgeBandScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   safe:     { flex:1, backgroundColor:'#F5F6F8' },
   content:  { padding:20, paddingTop:16 },
-  rtl:      { textAlign:'right', writingDirection:'rtl' },
+  rtl:      { textAlign:'right', writingDirection:'rtl', fontFamily: 'NotoNastaliqUrdu' },
   topBar:   { flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginBottom:20, marginTop:28 },
   backBtn:  { padding:4 },
   audioBtn: { padding:4 },

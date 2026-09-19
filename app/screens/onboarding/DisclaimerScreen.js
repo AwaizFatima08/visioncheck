@@ -92,7 +92,7 @@ const DisclaimerScreen = ({ navigation, route }) => {
       {!scrolled && (
         <View style={styles.scrollHint}>
           <Feather name="chevrons-down" size={16} color="#9EA3AB" />
-          <Text style={styles.scrollHintText}>{s.disclaimer_scroll_prompt}</Text>
+          <Text style={[styles.scrollHintText, isUrdu && styles.rtl]}>{s.disclaimer_scroll_prompt}</Text>
         </View>
       )}
 
@@ -103,7 +103,7 @@ const DisclaimerScreen = ({ navigation, route }) => {
           disabled={!scrolled}
           activeOpacity={0.85}
         >
-          <Text style={styles.agreeBtnText}>{s.disclaimer_agree}</Text>
+          <Text style={[styles.agreeBtnText, isUrdu && styles.rtl]}>{s.disclaimer_agree}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -112,7 +112,7 @@ const DisclaimerScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   safe:           { flex:1, backgroundColor:'#F5F6F8' },
-  rtl:            { textAlign:'right', writingDirection:'rtl' },
+  rtl:            { textAlign:'right', writingDirection:'rtl', fontFamily: 'NotoNastaliqUrdu' },
   urduBody:       { fontSize:15, lineHeight:28 },
   header:         { flexDirection:'row', alignItems:'center', gap:10, padding:20, paddingTop:44 },
   title:          { fontSize:20, fontWeight:'700', color:'#1A1C1E', flex:1 },

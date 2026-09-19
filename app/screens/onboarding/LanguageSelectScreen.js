@@ -62,12 +62,12 @@ const styles = StyleSheet.create({
   iconWrap:     { width:72, height:72, borderRadius:20, backgroundColor:'#E8F1FB', alignItems:'center', justifyContent:'center', marginBottom:16 },
   appName:      { fontSize:28, fontWeight:'800', color:'#1A1C1E', marginBottom:24 },
   prompt:       { fontSize:16, color:'#5A5D63', marginBottom:4 },
-  promptUrdu:   { fontSize:16, color:'#5A5D63', marginBottom:32 },
+  promptUrdu:   { fontSize:16, color:'#5A5D63', marginBottom:32, fontFamily:'NotoNastaliqUrdu' },
   langBtn:      { width:'100%', backgroundColor:'#FFFFFF', borderRadius:14, borderWidth:1, borderColor:'#E2E4E8', paddingVertical:18, paddingHorizontal:20, alignItems:'center', marginVertical:8 },
   langBtnUrdu:  { backgroundColor:'#E8F1FB', borderColor:'#1A6FD4' },
   langBtnText:  { fontSize:20, fontWeight:'700', color:'#1A1C1E' },
   langBtnSub:   { fontSize:13, color:'#5A5D63', marginTop:3 },
-  urduText:     { color:'#1A6FD4' },
+  urduText:     { color:'#1A6FD4', fontFamily:'NotoNastaliqUrdu' },
 });
 
 export default LanguageSelectScreen;

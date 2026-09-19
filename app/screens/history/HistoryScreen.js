@@ -77,7 +77,7 @@ const HistoryScreen = ({ navigation, route }) => {
         {isUrdu ? 'پہلا معائنہ مکمل کریں تو نتائج یہاں دکھائی دیں گے' : 'Complete your first assessment to see results here'}
       </Text>
       <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('Home', { language })} activeOpacity={0.85}>
-        <Text style={styles.startBtnText}>{isUrdu ? 'ٹیسٹ شروع کریں' : 'Start an assessment'}</Text>
+        <Text style={[styles.startBtnText, isUrdu && styles.rtl]}>{isUrdu ? 'ٹیسٹ شروع کریں' : 'Start an assessment'}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -118,7 +118,7 @@ const HistoryScreen = ({ navigation, route }) => {
               <Text style={styles.metaChipText}>👤 {ageBandLabel(item.age_band, language)}</Text>
             </View>
             <View style={styles.metaChip}>
-              <Text style={styles.metaChipText}>🌐 {item.language === 'ur' ? 'اردو' : 'English'}</Text>
+              <Text style={[styles.metaChipText, item.language === 'ur' && { fontFamily: 'NotoNastaliqUrdu' }]}>🌐 {item.language === 'ur' ? 'اردو' : 'English'}</Text>
             </View>
           </View>
         </View>
@@ -169,7 +169,7 @@ const getAlertLabel = (alert, isUrdu) => ({
 
 const styles = StyleSheet.create({
   safe:             { flex:1, backgroundColor:'#F5F6F8' },
-  rtl:              { textAlign:'right', writingDirection:'rtl' },
+  rtl:              { textAlign:'right', writingDirection:'rtl', fontFamily: 'NotoNastaliqUrdu' },
   header:           { flexDirection:'row', justifyContent:'space-between', alignItems:'center', paddingHorizontal:20, paddingTop:20, paddingBottom:8 },
   heading:          { fontSize:24, fontWeight:'800', color:'#1A1C1E' },
   headerRight:      { flexDirection:'row', gap:10, alignItems:'center' },

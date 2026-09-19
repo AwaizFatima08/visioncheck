@@ -128,7 +128,7 @@ const HomeScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   safe:           { flex:1, backgroundColor:'#F5F6F8' },
   content:        { padding:20, paddingTop:52 },
-  rtl:            { textAlign:'right', writingDirection:'rtl' },
+  rtl:            { textAlign:'right', writingDirection:'rtl', fontFamily: 'NotoNastaliqUrdu' },
   topBar:         { flexDirection:'row', justifyContent:'space-between', alignItems:'flex-start', marginBottom:16 },
   topRight:       { flexDirection:'row', alignItems:'center', gap:10 },
   greeting:       { fontSize:26, fontWeight:'800', color:'#1A1C1E' },

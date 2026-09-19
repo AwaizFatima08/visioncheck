@@ -9,6 +9,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
 import { initDatabase } from './app/database/db';
 import AppNavigator from './app/navigation/AppNavigator';
 
@@ -17,6 +18,13 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [ready, setReady] = useState(false);
+  // The device's default font doesn't reliably cover every Urdu letter across
+  // Android OEMs — bundling Noto Nastaliq Urdu guarantees every screen (and
+  // critically, the near-vision reading test) renders correctly regardless
+  // of device.
+  const [fontsLoaded, fontError] = useFonts({
+    NotoNastaliqUrdu: require('./assets/fonts/NotoNastaliqUrdu.ttf'),
+  });
 
   useEffect(() => {
     try {
@@ -26,11 +34,16 @@ export default function App() {
       console.error('DB init error:', err);
     } finally {
       setReady(true);
-      SplashScreen.hideAsync();
     }
   }, []);
 
-  if (!ready) {
+  useEffect(() => {
+    if (ready && (fontsLoaded || fontError)) {
+      SplashScreen.hideAsync();
+    }
+  }, [ready, fontsLoaded, fontError]);
+
+  if (!ready || (!fontsLoaded && !fontError)) {
     return (
       <View style={styles.loading}>
         <ActivityIndicator size="large" color="#FFFFFF" />

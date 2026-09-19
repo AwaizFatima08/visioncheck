@@ -120,7 +120,7 @@ const TestAmslerScreen = ({ navigation, route }) => {
 
         <View style={styles.distanceBadge}>
           <Feather name="smartphone" size={16} color="#1A6FD4" />
-          <Text style={styles.distanceText}>
+          <Text style={[styles.distanceText, isUrdu && styles.rtl]}>
             {isUrdu ? 'فون کو پڑھنے کی دوری پر رکھیں — ۳۰ سینٹی میٹر' : 'Hold phone at reading distance — 30 cm'}
           </Text>
         </View>
@@ -163,7 +163,7 @@ const TestAmslerScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#F5F6F8' },
   content: { padding: 20, paddingTop: 16 },
-  rtl: { textAlign: 'right', writingDirection: 'rtl' },
+  rtl: { textAlign: 'right', writingDirection: 'rtl', fontFamily: 'NotoNastaliqUrdu' },
   progressRow: { flexDirection: 'row', gap: 5, marginBottom: 16 },
   progressDot: { flex: 1, height: 3, borderRadius: 2, backgroundColor: '#E2E4E8' },
   progressDone: { backgroundColor: '#3B6D11' },
