@@ -12,8 +12,12 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle as SvgCircle } from 'react-native-svg';
 
-const PLATE_SIZE = 200;
-const DOT_COUNT  = 900;
+const PLATE_SIZE  = 240;
+const DOT_COUNT   = 1600;
+// Everything below was tuned against a 200px plate; scaling every dimension
+// by this factor keeps the same proportions at the larger size instead of
+// re-deriving constants by hand.
+const PLATE_SCALE = PLATE_SIZE / 200;
 
 // Three plates — background colour, figure colour, hidden number
 export const COLOR_PLATES = [
@@ -45,7 +49,7 @@ export const COLOR_PLATES = [
 const generateDots = (plate) => {
   const cx     = PLATE_SIZE / 2;
   const cy     = PLATE_SIZE / 2;
-  const radius = PLATE_SIZE / 2 - 4;
+  const radius = PLATE_SIZE / 2 - 4 * PLATE_SCALE;
 
   return Array.from({ length: DOT_COUNT }, (_, i) => {
     // Deterministic x,y within the circle
@@ -53,7 +57,10 @@ const generateDots = (plate) => {
     const r      = Math.sqrt((i + 1) / DOT_COUNT) * radius;
     const x      = cx + r * Math.cos(angle);
     const y      = cy + r * Math.sin(angle);
-    const dotR   = 2.0 + (i % 4) * (2.5 / 3);
+    // Small dots packed densely (real Ishihara-style plates), not a few big
+    // ones — that's what actually makes the digit strokes read as solid
+    // shapes instead of a scatter of blobs.
+    const dotR   = (1.6 + (i % 4) * (2.0 / 3)) * PLATE_SCALE;
 
     // Determine if this dot is part of the hidden number
     const inFigure = isInFigure(x, y, plate.number, cx, cy);
@@ -119,11 +126,20 @@ const isInDigit = (localX, localY, digit, scale, stroke) => {
 const isInFigure = (x, y, number, cx, cy) => {
   const dx = x - cx;
   const dy = y - cy;
-  const digits = String(number).split('').map(Number);
+  const digits    = String(number).split('').map(Number);
   const twoDigit  = digits.length > 1;
-  const scale     = twoDigit ? 0.85 : 1.3;
-  const stroke    = twoDigit ? 9 : 12;
-  const spacing   = 26 * scale + 10;
+  const scaleBase  = twoDigit ? 0.8 : 1.5;
+  const strokeBase = twoDigit ? 8 : 14;
+  const scale     = scaleBase * PLATE_SCALE;
+  const stroke    = strokeBase * PLATE_SCALE;
+  // Spacing must clear each digit's own half-width *plus* its stroke bleed
+  // on both sides, with an explicit gap on top — otherwise the two digits'
+  // top/bottom bars touch and fuse into one blob (verified this was the
+  // actual bug: a naive `26 * scale` spacing did not account for stroke
+  // width at all, so thicker strokes silently merged adjacent digits).
+  const halfWidthWithStroke = 13 * scale + stroke;
+  const gapBase   = 16;
+  const spacing   = 2 * halfWidthWithStroke + gapBase * PLATE_SCALE;
   const totalW    = (digits.length - 1) * spacing;
   const startX    = -totalW / 2;
 
@@ -141,11 +157,13 @@ const ColorPlate = ({ plateIndex = 0 }) => {
         <SvgCircle
           cx={PLATE_SIZE / 2}
           cy={PLATE_SIZE / 2}
-          r={PLATE_SIZE / 2 - 2}
+          r={PLATE_SIZE / 2 - 2 * PLATE_SCALE}
           fill={plate.bgColor}
         />
 
-        {/* Dots — figure colour or background colour */}
+        {/* Dots — figure colour or background colour. Fully opaque: alpha
+            blending here only softened the figure/background contrast and
+            made the hidden number harder to read, not easier. */}
         {dots.map((dot, i) => (
           <SvgCircle
             key={i}
@@ -153,7 +171,6 @@ const ColorPlate = ({ plateIndex = 0 }) => {
             cy={dot.y.toFixed(1)}
             r={dot.r}
             fill={dot.inFigure ? plate.fgColor : plate.bgColor}
-            opacity="0.9"
           />
         ))}
       </Svg>
