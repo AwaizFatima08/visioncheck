@@ -14,7 +14,7 @@ import {
 import { Feather } from '@expo/vector-icons';
 import NearVisionChart from '../../components/charts/NearVisionChart';
 import { getNearAlert, checkEyeDifference } from '../../engine/alertLogic';
-import { getNextTest, getTestProgress } from '../../engine/symptomRouter';
+import { getTestProgress } from '../../engine/symptomRouter';
 import { speakEyePrompt, speakDistance, speakPrompt } from '../../audio/speech';
 import { strings } from '../../i18n/strings';
 
@@ -81,13 +81,9 @@ const TestNearScreen = ({ navigation, route }) => {
       };
 
       const updatedResults = { ...assessmentResults, near: testResult };
-      const nextTest       = getNextTest(testQueue, 'TestNear');
-
-      if (nextTest) {
-        navigation.navigate(nextTest, { language, ageBand, testQueue, assessmentResults: updatedResults });
-      } else {
-        navigation.navigate('FinalSummary', { language, ageBand, assessmentResults: updatedResults });
-      }
+      navigation.navigate('TestResult', {
+        language, ageBand, testQueue, assessmentResults: updatedResults, currentTest: 'TestNear',
+      });
     }
   };
 

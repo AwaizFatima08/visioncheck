@@ -19,7 +19,7 @@ import SnellenChart, {
   ALL_ROTATIONS,
 } from '../../components/charts/SnellenChart';
 import { getDistanceAlert, checkEyeDifference } from '../../engine/alertLogic';
-import { getNextTest, getTestProgress } from '../../engine/symptomRouter';
+import { getTestProgress } from '../../engine/symptomRouter';
 import { speakEPrompt, speakFeedback, speakEyePrompt, speakDistance } from '../../audio/speech';
 import { strings } from '../../i18n/strings';
 
@@ -105,13 +105,9 @@ const TestDistanceScreen = ({ navigation, route }) => {
       };
 
       const updatedResults = { ...assessmentResults, distance: testResult };
-      const nextTest       = getNextTest(testQueue, 'TestDistance');
-
-      if (nextTest) {
-        navigation.navigate(nextTest, { language, ageBand, testQueue, assessmentResults: updatedResults });
-      } else {
-        navigation.navigate('FinalSummary', { language, ageBand, assessmentResults: updatedResults });
-      }
+      navigation.navigate('TestResult', {
+        language, ageBand, testQueue, assessmentResults: updatedResults, currentTest: 'TestDistance',
+      });
     }
   };
 

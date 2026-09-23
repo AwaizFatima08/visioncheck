@@ -12,7 +12,7 @@ import {
 import { Feather } from '@expo/vector-icons';
 import AmslerGrid from '../../components/charts/AmslerGrid';
 import { getAmslerAlert, ALERT, checkEyeDifference } from '../../engine/alertLogic';
-import { getNextTest, getTestProgress } from '../../engine/symptomRouter';
+import { getTestProgress } from '../../engine/symptomRouter';
 import { strings } from '../../i18n/strings';
 
 const EYES = ['R', 'L'];
@@ -73,12 +73,9 @@ const TestAmslerScreen = ({ navigation, route }) => {
   };
 
   const navigateNext = (updatedResults) => {
-    const nextTest = getNextTest(testQueue, 'TestAmsler');
-    if (nextTest) {
-      navigation.navigate(nextTest, { language, ageBand, testQueue, assessmentResults: updatedResults });
-    } else {
-      navigation.navigate('FinalSummary', { language, ageBand, assessmentResults: updatedResults });
-    }
+    navigation.navigate('TestResult', {
+      language, ageBand, testQueue, assessmentResults: updatedResults, currentTest: 'TestAmsler',
+    });
   };
 
   const eyeLabel   = currentEye === 'R' ? (isUrdu ? 'دائیں آنکھ' : 'Right Eye') : (isUrdu ? 'بائیں آنکھ' : 'Left Eye');

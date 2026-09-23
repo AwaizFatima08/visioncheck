@@ -12,7 +12,7 @@ import {
 import { Feather } from '@expo/vector-icons';
 import AstigmatismFan from '../../components/charts/AstigmatismFan';
 import { getAstigAlert, checkEyeDifference } from '../../engine/alertLogic';
-import { getNextTest, getTestProgress } from '../../engine/symptomRouter';
+import { getTestProgress } from '../../engine/symptomRouter';
 import { strings } from '../../i18n/strings';
 
 const EYES = ['R', 'L'];
@@ -51,13 +51,9 @@ const TestAstigmatismScreen = ({ navigation, route }) => {
       };
 
       const updatedResults = { ...assessmentResults, astigmatism: testResult };
-      const nextTest       = getNextTest(testQueue, 'TestAstigmatism');
-
-      if (nextTest) {
-        navigation.navigate(nextTest, { language, ageBand, testQueue, assessmentResults: updatedResults });
-      } else {
-        navigation.navigate('FinalSummary', { language, ageBand, assessmentResults: updatedResults });
-      }
+      navigation.navigate('TestResult', {
+        language, ageBand, testQueue, assessmentResults: updatedResults, currentTest: 'TestAstigmatism',
+      });
     }
   };
 

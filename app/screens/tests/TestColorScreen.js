@@ -12,7 +12,7 @@ import {
 import { Feather } from '@expo/vector-icons';
 import ColorPlate, { COLOR_PLATES } from '../../components/charts/ColorPlate';
 import { getColorAlert } from '../../engine/alertLogic';
-import { getNextTest, getTestProgress } from '../../engine/symptomRouter';
+import { getTestProgress } from '../../engine/symptomRouter';
 import { strings } from '../../i18n/strings';
 
 const TestColorScreen = ({ navigation, route }) => {
@@ -64,13 +64,9 @@ const TestColorScreen = ({ navigation, route }) => {
       };
 
       const updatedResults = { ...assessmentResults, color: testResult };
-      const nextTest       = getNextTest(testQueue, 'TestColor');
-
-      if (nextTest) {
-        navigation.navigate(nextTest, { language, ageBand, testQueue, assessmentResults: updatedResults });
-      } else {
-        navigation.navigate('FinalSummary', { language, ageBand, assessmentResults: updatedResults });
-      }
+      navigation.navigate('TestResult', {
+        language, ageBand, testQueue, assessmentResults: updatedResults, currentTest: 'TestColor',
+      });
     }
   };
 

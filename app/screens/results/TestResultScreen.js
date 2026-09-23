@@ -92,6 +92,19 @@ const getExplanation = (testName, alertLevel, language) => {
   return testExp[level] || testExp.green;
 };
 
+// currentTest arrives as the screen name (e.g. 'TestDistance') because
+// that's what testQueue/getNextTest/getTestProgress need — but
+// assessmentResults and the explanation/label tables are keyed by the
+// lowercase test name (e.g. 'distance'). This maps one to the other.
+const SCREEN_TO_RESULT_KEY = {
+  TestDistance:    'distance',
+  TestNear:        'near',
+  TestAstigmatism: 'astigmatism',
+  TestContrast:    'contrast',
+  TestAmsler:      'amsler',
+  TestColor:       'color',
+};
+
 // Human-readable test names
 const TEST_LABELS = {
   en: {
@@ -118,9 +131,10 @@ const TestResultScreen = ({ navigation, route }) => {
     assessmentResults, currentTest,
   } = route.params;
 
-  const isUrdu   = language === 'ur';
-  const result   = assessmentResults[currentTest];
-  const progress = getTestProgress(testQueue, currentTest);
+  const isUrdu     = language === 'ur';
+  const resultKey  = SCREEN_TO_RESULT_KEY[currentTest] || currentTest;
+  const result     = assessmentResults[resultKey];
+  const progress   = getTestProgress(testQueue, currentTest);
 
   // Determine overall alert for this test
   const alertLevels = [
@@ -136,8 +150,8 @@ const TestResultScreen = ({ navigation, route }) => {
     : ALERT.GREEN;
 
   const style      = ALERT_STYLE[worstAlert];
-  const explanation = getExplanation(currentTest, worstAlert, language);
-  const testLabel  = (TEST_LABELS[language] || TEST_LABELS.en)[currentTest];
+  const explanation = getExplanation(resultKey, worstAlert, language);
+  const testLabel  = (TEST_LABELS[language] || TEST_LABELS.en)[resultKey];
   const nextTest   = getNextTest(testQueue, currentTest);
 
   // Speak result on load
@@ -230,7 +244,7 @@ const TestResultScreen = ({ navigation, route }) => {
         )}
 
         {/* Colour test score */}
-        {currentTest === 'color' && result?.correctCount !== undefined && (
+        {resultKey === 'color' && result?.correctCount !== undefined && (
           <View style={styles.scoreBox}>
             <Text style={[styles.scoreLabel, isUrdu && styles.rtl]}>
               {isUrdu ? 'درست جوابات' : 'Correct answers'}

@@ -12,7 +12,7 @@ import {
 import { Feather } from '@expo/vector-icons';
 import ContrastChart from '../../components/charts/ContrastChart';
 import { getContrastAlert } from '../../engine/alertLogic';
-import { getNextTest, getTestProgress } from '../../engine/symptomRouter';
+import { getTestProgress } from '../../engine/symptomRouter';
 import { strings } from '../../i18n/strings';
 
 const RESPONSES = [
@@ -38,13 +38,9 @@ const TestContrastScreen = ({ navigation, route }) => {
     };
 
     const updatedResults = { ...assessmentResults, contrast: testResult };
-    const nextTest       = getNextTest(testQueue, 'TestContrast');
-
-    if (nextTest) {
-      navigation.navigate(nextTest, { language, ageBand, testQueue, assessmentResults: updatedResults });
-    } else {
-      navigation.navigate('FinalSummary', { language, ageBand, assessmentResults: updatedResults });
-    }
+    navigation.navigate('TestResult', {
+      language, ageBand, testQueue, assessmentResults: updatedResults, currentTest: 'TestContrast',
+    });
   };
 
   return (
