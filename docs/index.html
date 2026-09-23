@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VisionCheck — Vision self-screening, offline &amp; bilingual</title>
+<meta name="description" content="VisionCheck is a free, offline, bilingual (English/Urdu) vision self-screening app. Six standard eye tests, plain-language results, and nothing ever leaves your phone.">
+<style>
+  @font-face {
+    font-family: 'NotoNastaliqUrdu';
+    src: url('fonts/NotoNastaliqUrdu.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  .urdu { font-family: 'NotoNastaliqUrdu', sans-serif; }
+  :root {
+    --brand: #1A6FD4;
+    --brand-dark: #0F4C99;
+    --brand-light: #EAF2FB;
+    --text: #1a1a18;
+    --text-secondary: #52514e;
+    --text-muted: #888780;
+    --border: #d3d1c7;
+    --bg: #ffffff;
+    --surface: #f8f7f4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+  a { color: var(--brand); }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  nav { padding: 20px 0; }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; color: var(--text); text-decoration: none; }
+  .brand img { width: 32px; height: 32px; border-radius: 8px; }
+  nav .links { display: flex; gap: 24px; font-size: 14px; }
+  nav .links a { color: var(--text-secondary); text-decoration: none; }
+  nav .links a:hover { color: var(--brand); }
+
+  /* Hero */
+  .hero { background: linear-gradient(180deg, var(--brand-light) 0%, #ffffff 100%); padding: 56px 0 64px; }
+  .hero .wrap { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px; }
+  .hero img.icon { width: 96px; height: 96px; border-radius: 22px; box-shadow: 0 8px 24px rgba(26,111,212,0.25); }
+  .hero h1 { font-size: 40px; font-weight: 800; margin: 8px 0 0; letter-spacing: -0.5px; }
+  .hero .urdu { font-size: 22px; color: var(--text-secondary); direction: rtl; }
+  .hero p.tag { font-size: 18px; color: var(--text-secondary); max-width: 560px; margin: 0; }
+  .hero .badges { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+  .badge { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 13px; color: var(--text-secondary); }
+  .cta-note { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+  /* Feature graphic band */
+  .banner { width: 100%; overflow: hidden; }
+  .banner img { width: 100%; display: block; }
+
+  /* Sections */
+  section { padding: 56px 0; }
+  h2 { font-size: 26px; font-weight: 800; text-align: center; margin: 0 0 8px; }
+  .section-sub { text-align: center; color: var(--text-secondary); max-width: 560px; margin: 0 auto 36px; font-size: 15px; }
+
+  /* Test grid */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 700px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 460px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+  .card .emoji { font-size: 26px; }
+  .card h3 { font-size: 15px; margin: 10px 0 4px; }
+  .card p { font-size: 13px; color: var(--text-secondary); margin: 0; }
+
+  /* Privacy section */
+  .privacy { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .privacy .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  @media (max-width: 620px) { .privacy .grid2 { grid-template-columns: 1fr; } }
+  .point { display: flex; gap: 12px; align-items: flex-start; }
+  .point .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); margin-top: 8px; flex-shrink: 0; }
+  .point strong { display: block; font-size: 14px; }
+  .point span { font-size: 13px; color: var(--text-secondary); }
+
+  /* Disclaimer */
+  .disclaimer-box { background: #FCEBEB; border: 1px solid #F7C1C1; border-radius: 12px; padding: 20px 24px; font-size: 14px; color: #A32D2D; }
+  .disclaimer-box strong { display: block; margin-bottom: 6px; }
+
+  footer { background: var(--text); color: #cfcec8; padding: 40px 0; font-size: 13px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center; }
+  footer .flinks { display: flex; gap: 20px; flex-wrap: wrap; }
+  footer a { color: #cfcec8; text-decoration: none; }
+  footer a:hover { color: #fff; }
+  footer .copy { color: #8a897f; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="icon.png" alt="VisionCheck icon"> VisionCheck</a>
+    <div class="links">
+      <a href="#tests">Tests</a>
+      <a href="#privacy">Privacy</a>
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="terms-and-conditions.html">Terms</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <img class="icon" src="icon.png" alt="VisionCheck app icon">
+    <h1>VisionCheck</h1>
+    <div class="urdu">نظر کا معائنہ</div>
+    <p class="tag">A free, offline, bilingual vision self-screening app. Six
+      standard eye tests, plain-language results, and a clear answer to
+      "should I see a doctor?" — right on your phone.</p>
+    <div class="badges">
+      <span class="badge">🔒 100% offline</span>
+      <span class="badge">🌐 English &amp; اردو</span>
+      <span class="badge">🆓 Free, no ads</span>
+      <span class="badge">👤 No account needed</span>
+    </div>
+    <div class="cta-note">Coming soon to Google Play</div>
+  </div>
+</header>
+
+<div class="banner"><img src="feature-graphic.jpg" alt="VisionCheck banner"></div>
+
+<section id="tests">
+  <div class="wrap">
+    <h2>Six standard vision tests</h2>
+    <p class="section-sub">Guided by your symptoms, or run all six as a full check — each test is DPI-calibrated so what you see on screen is physically accurate to real clinical distances.</p>
+    <div class="grid">
+      <div class="card"><div class="emoji">🔭</div><h3>Distance Vision</h3><p>Tumbling-E test for short-sightedness, tested eye by eye.</p></div>
+      <div class="card"><div class="emoji">📖</div><h3>Near Vision</h3><p>Reading-distance text sizes, adjusted for presbyopia by age.</p></div>
+      <div class="card"><div class="emoji">〰️</div><h3>Astigmatism</h3><p>A starburst fan chart checks for uneven corneal curvature.</p></div>
+      <div class="card"><div class="emoji">🌫️</div><h3>Contrast Sensitivity</h3><p>Faded text at four levels — an early cataract indicator.</p></div>
+      <div class="card"><div class="emoji">⊞</div><h3>Amsler Grid</h3><p>Central vision check for macular changes — flags urgently if abnormal.</p></div>
+      <div class="card"><div class="emoji">🎨</div><h3>Colour Vision</h3><p>Simplified plate-style test for colour vision deficiency.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="privacy" id="privacy">
+  <div class="wrap">
+    <h2>Built privacy-first</h2>
+    <p class="section-sub">There is no backend. VisionCheck was designed so we never see your data — because we never receive it.</p>
+    <div class="grid2">
+      <div class="point"><div class="dot"></div><div><strong>No account, no login</strong><span>Open the app and start — nothing to sign up for.</span></div></div>
+      <div class="point"><div class="dot"></div><div><strong>Nothing sent anywhere</strong><span>The app makes zero network requests. Everything stays on your device.</span></div></div>
+      <div class="point"><div class="dot"></div><div><strong>You control your history</strong><span>Clear it any time from Settings, or uninstall to remove everything.</span></div></div>
+      <div class="point"><div class="dot"></div><div><strong>No ads, no analytics</strong><span>Nothing tracks you. The app is simply free to use.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="disclaimer-box">
+      <strong>VisionCheck is a self-screening tool, not a medical device.</strong>
+      It does not diagnose anything and does not replace a professional eye
+      examination by a qualified ophthalmologist or optometrist. If you
+      experience sudden vision loss, severe eye pain, or flashes of light,
+      do not rely on this app — seek emergency medical attention
+      immediately.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="terms-and-conditions.html">Terms &amp; Conditions</a>
+      <a href="delete-account.html">Delete Account &amp; Data</a>
+      <a href="mailto:homi55@gmail.com">Contact</a>
+    </div>
+    <div class="copy">VisionCheck · HomiLabs Solutions SMC Pvt. Ltd. · © 2026</div>
+  </div>
+</footer>
+
+</body>
+</html>
