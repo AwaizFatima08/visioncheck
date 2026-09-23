@@ -63,8 +63,11 @@ Amsler grid, colour blindness test, astigmatism test, Urdu app
 ## Store assets checklist
 - [x] App icon 512x512 — export from assets/icon.png (see note below)
 - [x] Feature graphic 1024x500 — docs/play-store/feature-graphic.png
-- [ ] Phone screenshots — min 2, max 8, 16:9 or 9:16 — see screenshot-shotlist.md
-- [ ] (Optional) Tablet screenshots — 7" and 10"
+- [x] Phone screenshots — docs/play-store/screenshots/ (14 captured, 8
+      recommended for upload — see screenshot-shotlist.md)
+- [ ] (Optional) Tablet screenshots — 7" and 10" — not captured; the app
+      isn't tablet-optimized specifically, phone screenshots are sufficient
+      for initial submission
 
 Note on the 512x512 Play Store icon: Play Console generates it automatically
 from the app's adaptive icon at submission review time in most cases, but if
