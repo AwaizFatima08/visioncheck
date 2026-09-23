@@ -1,8 +1,10 @@
 # Pre-launch test report — VisionCheck v1.0.1
 
 Last updated after: SDK 55 upgrade fixes, colour-plate fix, Urdu font fix,
-and a full line-by-line debug pass of every remaining file.
-Latest commit tested against: `e431a04` (full debug pass).
+a full line-by-line debug pass of every remaining file, Gemini-generated
+icon/feature graphic, real captured screenshots, and wiring
+TestResultScreen into the actual test flow.
+Latest commit tested against: `171d6bb` (TestResultScreen wiring).
 
 ## Full debug pass (this update)
 
@@ -40,22 +42,18 @@ Also removed 6 more files confirmed to be empty, unimported scaffolding
 (`app/hooks/*`, `app/constants/*`) — same category as the earlier
 ui.js/testEngine.js cleanup.
 
-**One significant finding not fixed, flagged for a decision rather than
-changed unilaterally**: `TestResultScreen.js` — a fully-built screen with
-plain-language, per-alert-level explanations for every test ("You could
-only read larger letters... this suggests possible short-sightedness...")
-— is registered in the navigator but **no test screen ever navigates to
-it**. All 6 test screens skip directly from one test to the next (or to
-Final Summary), so this entire explanation screen is dead code from a
-navigation standpoint, and users never see the detailed "why" behind an
-individual test result — only the aggregate alert level in the final
-summary. This matches the app's own documented navigation diagram
-(`docs/blueprint.md`), which shows an "Individual Result" step after each
-test, so it reads as an oversight rather than intentional simplification —
-but re-inserting it changes the test-taking flow (an extra screen/tap after
-every test) and touches all 6 test screens' navigation calls, so it's a
-product decision, not just a bug fix. Recommend discussing directly with
-the user before touching it.
+**Update — resolved.** `TestResultScreen.js` is now wired into the flow: all
+6 test screens navigate to it after completing, and it navigates onward to
+the next test (or Final Summary) itself. The disconnect turned out to have
+a concrete root cause, not just a missing navigation call — the screen used
+its `currentTest` param for two incompatible lookups (assessmentResults'
+lowercase keys vs. testQueue's screen-name entries), which likely broke
+whichever was fixed first and led to it being routed around instead.
+Fixed with an explicit screen-name → result-key map. Verified live: a
+single-test queue lands on TestResult with the correct explanation/score
+and a "View final summary" button; a multi-test queue shows the per-eye
+breakdown and a "Next test" button that correctly advances to the next
+screen in the queue.
 
 Scope note up front: VisionCheck has **no backend, no API, and no login** —
 confirmed by grepping the entire codebase for `fetch`/`axios`/`XMLHttpRequest`
