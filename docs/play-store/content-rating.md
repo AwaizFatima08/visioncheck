@@ -12,7 +12,7 @@ Answer **No** to all of the following (the app has none of this content):
 - Gambling (simulated or real)
 - User-generated content shared with other users
 - Ability to communicate with or share location with other users
-- Unrestricted internet access (app makes no network calls at all)
+- Unrestricted internet access (v1.0 only; v1.1 uses the network solely to load ads)
 - Shares user location
 - Allows purchase of digital goods (no in-app purchases exist)
 
@@ -30,5 +30,5 @@ objectionable content of any kind.
 - Target age group: 13+ recommended, though the app itself gates under-13
   users at the Age Band screen and redirects them to "see a specialist"
   rather than running self-tests on them.
-- Ads: **No ads** in the app.
+- Ads: v1.0 had no ads. **v1.1 shows AdMob banners** (Home and History only, non-personalised, PG max) — answer the ads question **Yes** and re-run the questionnaire.
 - In-app purchases: **None.**

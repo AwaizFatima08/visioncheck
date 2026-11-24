@@ -1,5 +1,9 @@
 # Play Console — Data Safety form answers
 
+> **v1.1.0 supersedes the v1.0 answers below.** v1.1 adds Google AdMob banners, so the form
+> must declare the SDK's data. The v1.1 answers are in `release-v1.1.md` §2. The v1.0
+> text below is kept only as history, and is no longer correct for v1.1.
+
 Based on a full review of the code: the app makes zero network requests
 (no `fetch`/`axios`/`XMLHttpRequest` anywhere in the source), uses no
 analytics/ads/crash-reporting SDKs, and has no login or account system.
