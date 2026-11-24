@@ -57,6 +57,7 @@ PRIVATE BY DESIGN
 ## 5. Release notes ("What's new", 500 max)
 English:
 ```
+• More accurate distance vision test: letters are now the true clinical size at 40 cm, with a new screen-size calibration (Settings)
 • Free, with small banner ads on the Home and History screens only — never during a test or on a result
 • Ads are non-personalised; your results never leave your phone
 • Every test still works offline
@@ -64,6 +65,7 @@ English:
 ```
 Urdu:
 ```
+• دور کی نظر کا ٹیسٹ اب زیادہ درست ہے: حروف ۴۰ سینٹی میٹر پر اصل طبی سائز میں دکھتے ہیں، اور سیٹنگز میں اسکرین کا سائز ناپنے کی سہولت ہے
 • ایپ مفت ہے، صرف ہوم اور ہسٹری اسکرین پر چھوٹے بینر اشتہارات — ٹیسٹ یا نتیجے کے دوران کبھی نہیں
 • اشتہارات ذاتی نوعیت کے نہیں؛ آپ کے نتائج آپ کے فون سے باہر نہیں جاتے
 • ہر ٹیسٹ اب بھی بغیر انٹرنیٹ چلتا ہے
