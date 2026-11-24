@@ -9,13 +9,15 @@
 // Any distortion, waviness, or missing areas while staring at centre = URGENT.
 
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Svg, { Line, Circle, Rect } from 'react-native-svg';
 import { TEST_SIZES } from '../../engine/dpiCalc';
 
 const GRID_LINES = 10; // 10×10 grid = 11 lines each direction
 
-const AmslerGrid = () => {
+// marks: array of [row, col] cells the user flagged. onToggle(row, col) makes the
+// grid tappable (marking mode). Without onToggle the grid is the plain test chart.
+const AmslerGrid = ({ marks = [], onToggle }) => {
   const gridSize   = TEST_SIZES.amslerGridTotal;
   const squareSize = TEST_SIZES.amslerSquare;
   const cx         = gridSize / 2;
@@ -37,13 +39,32 @@ const AmslerGrid = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.hint}>Fix your gaze on the centre dot only — do not look away</Text>
-      <Text style={styles.hintUr}>صرف درمیانی نقطے کو دیکھیں — نظر ہٹائیں نہیں</Text>
+      {onToggle ? (
+        <>
+          <Text style={styles.hint}>Tap the squares where lines looked wavy, bent, blank or blurred</Text>
+          <Text style={styles.hintUr}>جہاں لکیریں ٹیڑھی، خالی یا دھندلی لگیں ان خانوں کو دبائیں</Text>
+        </>
+      ) : (
+        <>
+          <Text style={styles.hint}>Fix your gaze on the centre dot only — do not look away</Text>
+          <Text style={styles.hintUr}>صرف درمیانی نقطے کو دیکھیں — نظر ہٹائیں نہیں</Text>
+        </>
+      )}
 
       <View style={styles.chartWrap}>
         <Svg width={gridSize} height={gridSize}>
           {/* White background */}
           <Rect x="0" y="0" width={gridSize} height={gridSize} fill="#FFFFFF" />
+
+          {/* Cells the user marked as distorted */}
+          {marks.map(([r, c]) => (
+            <Rect
+              key={`m${r}-${c}`}
+              x={c * squareSize} y={r * squareSize}
+              width={squareSize} height={squareSize}
+              fill="#D64541" fillOpacity="0.35"
+            />
+          ))}
 
           {/* Vertical grid lines */}
           {verticalLines.map((line, i) => (
@@ -70,6 +91,22 @@ const AmslerGrid = () => {
           {/* Centre dot — must be clearly visible */}
           <Circle cx={cx} cy={cy} r="4" fill="#1A1C1E" />
         </Svg>
+
+        {onToggle && (
+          <View style={[styles.touchLayer, { width: gridSize, height: gridSize }]}>
+            {Array.from({ length: GRID_LINES * GRID_LINES }, (_, i) => {
+              const r = Math.floor(i / GRID_LINES);
+              const c = i % GRID_LINES;
+              return (
+                <Pressable
+                  key={i}
+                  onPress={() => onToggle(r, c)}
+                  style={{ position: 'absolute', left: c * squareSize, top: r * squareSize, width: squareSize, height: squareSize }}
+                />
+              );
+            })}
+          </View>
+        )}
       </View>
     </View>
   );
@@ -97,6 +134,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center', fontFamily: 'NotoNastaliqUrdu',
   },
+  touchLayer: { position: 'absolute' },
   chartWrap: {
     alignItems: 'center',
     justifyContent: 'center',

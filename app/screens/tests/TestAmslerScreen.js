@@ -32,10 +32,36 @@ const TestAmslerScreen = ({ navigation, route }) => {
 
   const [eyeStep, setEyeStep] = useState(0);
   const [resultR, setResultR] = useState(null);
+  const [pending, setPending] = useState(null);   // abnormal response awaiting marking
+  const [marks,   setMarks]   = useState([]);     // [row, col] cells flagged by the user
   const currentEye            = EYES[eyeStep];
 
   const handleResponse = (responseKey) => {
+    if (responseKey === 'all_straight') {
+      finishEye(responseKey, []);
+    } else {
+      setPending(responseKey);
+      setMarks([]);
+    }
+  };
+
+  const toggleMark = (r, c) => {
+    setMarks(prev => prev.some(([a, b]) => a === r && b === c)
+      ? prev.filter(([a, b]) => !(a === r && b === c))
+      : [...prev, [r, c]]);
+  };
+
+  const finishMarking = () => {
+    const responseKey = pending;
+    const chosen      = marks;
+    setPending(null);
+    setMarks([]);
+    finishEye(responseKey, chosen);
+  };
+
+  const finishEye = (responseKey, cells) => {
     const alertForThis = getAmslerAlert(responseKey);
+    const details      = { marks: cells };
 
     // If URGENT on first eye — stop immediately, show urgent warning
     if (alertForThis === ALERT.URGENT && eyeStep === 0) {
@@ -43,6 +69,7 @@ const TestAmslerScreen = ({ navigation, route }) => {
         testName:  'amsler',
         responseR: responseKey,
         responseL: null,
+        detailsR:  details,
         alertR:    ALERT.URGENT,
         alertL:    null,
         diffAlert: null,
@@ -54,16 +81,17 @@ const TestAmslerScreen = ({ navigation, route }) => {
     }
 
     if (eyeStep === 0) {
-      setResultR(responseKey);
+      setResultR({ responseKey, details });
       setEyeStep(1);
     } else {
-      const alertR    = getAmslerAlert(resultR);
+      const alertR    = getAmslerAlert(resultR.responseKey);
       const alertL    = alertForThis;
       const diffAlert = checkEyeDifference(alertR, alertL);
 
       const testResult = {
         testName:  'amsler',
-        responseR: resultR, responseL: responseKey,
+        responseR: resultR.responseKey, responseL: responseKey,
+        detailsR:  resultR.details,     detailsL:  details,
         alertR, alertL, diffAlert,
       };
 
@@ -131,8 +159,26 @@ const TestAmslerScreen = ({ navigation, route }) => {
           {isUrdu ? `ٹیسٹ: ${eyeLabel}` : `Testing: ${eyeLabel}`}
         </Text>
 
-        <AmslerGrid />
+        <AmslerGrid marks={marks} onToggle={pending ? toggleMark : undefined} />
 
+        {pending ? (
+          <View>
+            <Text style={[styles.responsePrompt, isUrdu && styles.rtl]}>
+              {isUrdu
+                ? `نشان زد خانے: ${marks.length}۔ نشان لگانا اختیاری ہے مگر آئندہ موازنے میں مدد دیتا ہے۔`
+                : `Squares marked: ${marks.length}. Marking is optional, but it lets the app compare future checks.`}
+            </Text>
+            <TouchableOpacity style={styles.markDoneBtn} onPress={finishMarking} activeOpacity={0.85}>
+              <Text style={styles.markDoneText}>{isUrdu ? 'مکمل' : 'Done'}</Text>
+            </TouchableOpacity>
+            {marks.length > 0 && (
+              <TouchableOpacity style={styles.markClearBtn} onPress={() => setMarks([])} activeOpacity={0.8}>
+                <Text style={styles.markClearText}>{isUrdu ? 'نشانات صاف کریں' : 'Clear marks'}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ) : (
+        <>
         <Text style={[styles.responsePrompt, isUrdu && styles.rtl]}>
           {isUrdu
             ? 'درمیانی نقطے کو دیکھتے ہوئے جالی کیسی نظر آئی؟'
@@ -150,6 +196,8 @@ const TestAmslerScreen = ({ navigation, route }) => {
             <Text style={[styles.choiceSub, r.key !== 'all_straight' && styles.choiceSubWarn]}>{r.sub}</Text>
           </TouchableOpacity>
         ))}
+        </>
+        )}
 
         <View style={{ height: 32 }} />
       </ScrollView>
@@ -184,6 +232,10 @@ const styles = StyleSheet.create({
   choiceLabel: { fontSize: 14, fontWeight: '500', color: '#1A1C1E' },
   choiceSub: { fontSize: 12, color: '#9EA3AB', marginTop: 2 },
   choiceSubWarn: { color: '#A32D2D' },
+  markDoneBtn: { backgroundColor: '#1A6FD4', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginTop: 4 },
+  markDoneText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
+  markClearBtn: { backgroundColor: '#E2E4E8', borderRadius: 12, paddingVertical: 12, alignItems: 'center', marginTop: 8 },
+  markClearText: { color: '#1A1C1E', fontSize: 14, fontWeight: '600' },
 });
 
 export default TestAmslerScreen;

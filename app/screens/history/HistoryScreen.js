@@ -133,6 +133,11 @@ const HistoryScreen = ({ navigation, route }) => {
       <View style={styles.header}>
         <Text style={[styles.heading, isUrdu && styles.rtl]}>{isUrdu ? 'پچھلے معائنے' : 'Past Assessments'}</Text>
         <View style={styles.headerRight}>
+          {assessments.length > 0 && (
+            <TouchableOpacity onPress={() => navigation.navigate('Trends', { language })} style={styles.audioBtn}>
+              <Feather name="trending-up" size={18} color="#1A6FD4" />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={() => speak(isUrdu ? 'پچھلے معائنے' : 'Past Assessments', language)} style={styles.audioBtn}>
             <Feather name="volume-2" size={18} color="#1A6FD4" />
           </TouchableOpacity>

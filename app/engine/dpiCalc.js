@@ -85,6 +85,9 @@ const buildSizes = () => ({
   // Tumbling-E rows at 40 cm, finest rows dropped if this screen cannot draw them
   snellen: buildSnellenRows(),
 
+  // Contrast test letters: 11 mm tall (about 1.6 degrees at 40 cm); font size from cap height 0.72 em
+  contrastLetter: mmToDp(11) / 0.72,
+
   // Near vision rows at 30cm
   near: [
     { jaeger: 'J10', heightDp: mmToDp(5.0)  * 0.85, text: 'The quick brown fox jumps over the lazy dog.' },

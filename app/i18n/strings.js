@@ -44,7 +44,7 @@ export const strings = {
     home_start_complaint: 'I have a specific complaint',
     home_start_complaint_sub: 'Tell us your symptom — we recommend the right tests',
     home_start_full: 'Full eye check',
-    home_start_full_sub: 'Run all 6 tests in sequence',
+    home_start_full_sub: 'Run all 7 tests in sequence',
     home_history: 'My past results',
     home_history_sub: 'View previous assessments',
     home_settings: 'Settings',
@@ -68,7 +68,7 @@ export const strings = {
     recommended_title: 'Recommended tests for you',
     recommended_subtitle: 'Based on your symptoms',
     recommended_start: 'Begin tests',
-    recommended_run_all: 'Run all 6 tests instead',
+    recommended_run_all: 'Run all 7 tests instead',
 
     // Pre-test setup
     setup_title: 'Before each test',
@@ -227,7 +227,7 @@ export const strings = {
     home_start_complaint: 'مجھے ایک خاص شکایت ہے',
     home_start_complaint_sub: 'اپنی تکلیف بتائیں — ہم صحیح ٹیسٹ تجویز کریں گے',
     home_start_full: 'مکمل آنکھوں کا معائنہ',
-    home_start_full_sub: 'تمام ۶ ٹیسٹ ترتیب سے چلائیں',
+    home_start_full_sub: 'تمام ۷ ٹیسٹ ترتیب سے چلائیں',
     home_history: 'میرے پچھلے نتائج',
     home_history_sub: 'پچھلے معائنے دیکھیں',
     home_settings: 'ترتیبات',
@@ -251,7 +251,7 @@ export const strings = {
     recommended_title: 'آپ کے لیے تجویز کردہ ٹیسٹ',
     recommended_subtitle: 'آپ کی علامات کی بنیاد پر',
     recommended_start: 'ٹیسٹ شروع کریں',
-    recommended_run_all: 'اس کے بجائے تمام ۶ ٹیسٹ چلائیں',
+    recommended_run_all: 'اس کے بجائے تمام ۷ ٹیسٹ چلائیں',
 
     // Pre-test setup
     setup_title: 'ہر ٹیسٹ سے پہلے',

@@ -17,6 +17,7 @@ import { ALERT, ALERT_STYLE, getOverallAlert } from '../../engine/alertLogic';
 import { createAssessment, saveTestResult, completeAssessment } from '../../database/db';
 import { generateAndSharePDF, shareAsText } from '../../utils/shareResults';
 import { speakPrompt } from '../../audio/speech';
+import { maybeAskForReview } from '../../utils/reviewPrompt';
 import { TEST_LABELS, encodeDetails, describeDetail } from '../../engine/testInfo';
 
 // ─── What to do next — per overall alert level ───────────────────────────────
@@ -68,6 +69,7 @@ const FinalSummaryScreen = ({ navigation, route }) => {
         }
         await completeAssessment(id, overallAlert);
         setAssessmentId(id);
+        maybeAskForReview(overallAlert);
       } catch (err) {
         console.error('DB save error:', err);
       } finally {

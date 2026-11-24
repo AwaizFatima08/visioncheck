@@ -112,6 +112,20 @@ const HomeScreen = ({ navigation, route }) => {
           <Feather name={isUrdu ? 'chevron-left' : 'chevron-right'} size={20} color="rgba(255,255,255,0.6)" />
         </TouchableOpacity>
 
+        {/* Path C — Risk check */}
+        <TouchableOpacity style={styles.mainCard} onPress={() => navigation.navigate('RiskCheck', { language })} activeOpacity={0.85}>
+          <View style={[styles.cardIcon, { backgroundColor:'#FAEEDA' }]}>
+            <Text style={styles.cardIconEmoji}>🩺</Text>
+          </View>
+          <View style={styles.cardText}>
+            <Text style={[styles.cardTitle, isUrdu && styles.rtl]}>{isUrdu ? 'آنکھوں کی صحت کا خطرہ' : 'Eye health risk check'}</Text>
+            <Text style={[styles.cardSub, isUrdu && styles.rtl]}>
+              {isUrdu ? '۱ منٹ: جانیں آپ کو معائنہ کتنی بار کروانا چاہیے' : '1 minute: find out how often you should have an eye exam'}
+            </Text>
+          </View>
+          <Feather name={isUrdu ? 'chevron-left' : 'chevron-right'} size={20} color="#C0C3CA" />
+        </TouchableOpacity>
+
         {/* Tip */}
         <View style={styles.tipCard}>
           <Text style={styles.tipIcon}>💡</Text>

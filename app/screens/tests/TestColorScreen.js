@@ -1,9 +1,10 @@
 // VisionCheck — Colour Vision Test Screen
 // app/screens/tests/TestColorScreen.js
 //
-// Both eyes together. 3 colour plates shown one at a time.
-// User selects which number they see, or "no number".
-// Score tallied across all 3 plates.
+// Both eyes together. 9 colour plates shown one at a time (control, red-green
+// screening, protan-type, deutan-type and blue-yellow plates).
+// User selects which number they see, or "no number". The pattern of misses
+// is classified in engine/colorVision.js.
 
 import React, { useState, useMemo } from 'react';
 import {
@@ -11,7 +12,7 @@ import {
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import ColorPlate, { COLOR_PLATES } from '../../components/charts/ColorPlate';
-import { getColorAlert } from '../../engine/alertLogic';
+import { classifyColorVision } from '../../engine/colorVision';
 import { getTestProgress } from '../../engine/symptomRouter';
 import { strings } from '../../i18n/strings';
 
@@ -35,9 +36,7 @@ const TestColorScreen = ({ navigation, route }) => {
       { key: plate.number,  label: plate.number },
       { key: 'no_number',   label: isUrdu ? 'کوئی نمبر نظر نہیں آتا' : 'No number visible' },
     ];
-    // Add two plausible wrong numbers
-    const wrong = { '6': ['8', '0'], '29': ['21', '70'], '45': ['43', '15'] };
-    (wrong[plate.number] || []).forEach(n => opts.push({ key: n, label: n }));
+    plate.wrong.forEach(n => opts.push({ key: n, label: n }));
     // Shuffle options
     return opts.sort(() => Math.random() - 0.5);
   };
@@ -45,7 +44,7 @@ const TestColorScreen = ({ navigation, route }) => {
   const handleAnswer = (chosenKey) => {
     const isCorrect = chosenKey === currentPlate.number;
     const newCorrect = correctCount + (isCorrect ? 1 : 0);
-    const newResponses = [...responses, { plate: plateIndex, chosen: chosenKey, correct: isCorrect }];
+    const newResponses = [...responses, { plate: plateIndex, kind: currentPlate.kind, chosen: chosenKey, correct: isCorrect }];
 
     if (plateIndex < totalPlates - 1) {
       setCorrect(newCorrect);
@@ -53,14 +52,15 @@ const TestColorScreen = ({ navigation, route }) => {
       setPlateIndex(plateIndex + 1);
     } else {
       // All plates done
-      const alert = getColorAlert(newCorrect, totalPlates);
+      const summary = classifyColorVision(newResponses);
       const testResult = {
         testName:    'color',
         correctCount: newCorrect,
         totalPlates,
         responses:   newResponses,
-        alert,
+        alert:       summary.alert,
         eye:         'both',
+        details:     { type: summary.type, blueYellow: summary.blueYellow, missed: summary.missed },
       };
 
       const updatedResults = { ...assessmentResults, color: testResult };

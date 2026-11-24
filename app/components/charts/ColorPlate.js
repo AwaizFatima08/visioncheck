@@ -1,12 +1,18 @@
 // VisionCheck — Colour Vision Plate Component
 // app/components/charts/ColorPlate.js
 //
-// Renders simplified colour vision test plates.
-// NOT Ishihara plates (copyrighted) — original simplified dot-pattern design.
-// Three plates testing red-green and blue-yellow colour discrimination.
+// Renders pseudo-isochromatic colour vision plates (dot mosaics hiding a number).
+// NOT Ishihara plates (copyrighted) — original design with generated colours.
+//
+// Figure/background colours were found with a dichromat simulation
+// (Machado et al. 2009, severity 1.0): each pair is clear to normal vision but
+// indistinguishable to the deficiency named by its `kind` (see colorVision.js).
+// Every dot's lightness is randomised by the same amount in figure and
+// background, so lightness cannot give the number away. The classification
+// plates (P, D) use less jitter so the type that should see them still can.
 //
 // USAGE:
-// <ColorPlate plateIndex={0} />  — shows plate 1 of 3
+// <ColorPlate plateIndex={0} />
 
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
@@ -19,34 +25,53 @@ const DOT_COUNT   = 1600;
 // re-deriving constants by hand.
 const PLATE_SCALE = PLATE_SIZE / 200;
 
-// Three plates — background colour, figure colour, hidden number
+// Colour pairs (sRGB hex), equal luminance except the control plate.
+const PAIRS = {
+  N: { fg: '#1B2A5E', bg: '#E9D58B', jitter: 0.15 },  // dark navy on pale yellow
+  S: { fg: '#20A20C', bg: '#9D8C16', jitter: 0.25 },  // green / olive
+  P: { fg: '#B88101', bg: '#429F29', jitter: 0.15 },  // orange-yellow / green
+  D: { fg: '#2FA028', bg: '#DA6C45', jitter: 0.15 },  // green / orange-red
+  T: { fg: '#009E79', bg: '#26A106', jitter: 0.25 },  // teal / green
+};
+
+// Nine plates: control, 3 red-green screening, 2 protan-type, 2 deutan-type, 1 blue-yellow.
+// `wrong` are plausible mistakes shown as answer choices.
 export const COLOR_PLATES = [
-  {
-    index:      0,
-    bgColor:    '#D4714A',  // orange-red
-    fgColor:    '#6B9E3A',  // green
-    number:     '6',
-    tests:      'Red-green',
-  },
-  {
-    index:      1,
-    bgColor:    '#6B9E3A',  // green
-    fgColor:    '#D4714A',  // orange-red
-    number:     '29',
-    tests:      'Red-green',
-  },
-  {
-    index:      2,
-    bgColor:    '#4A7BC8',  // blue
-    fgColor:    '#C8A43A',  // yellow
-    number:     '45',
-    tests:      'Blue-yellow',
-  },
+  { index: 0, kind: 'N', number: '2',  wrong: ['7', '3'],   swap: false },
+  { index: 1, kind: 'S', number: '6',  wrong: ['8', '0'],   swap: false },
+  { index: 2, kind: 'S', number: '29', wrong: ['21', '70'], swap: true  },
+  { index: 3, kind: 'S', number: '74', wrong: ['71', '14'], swap: false },
+  { index: 4, kind: 'P', number: '5',  wrong: ['6', '3'],   swap: false },
+  { index: 5, kind: 'D', number: '3',  wrong: ['8', '5'],   swap: false },
+  { index: 6, kind: 'P', number: '38', wrong: ['36', '88'], swap: false },
+  { index: 7, kind: 'D', number: '57', wrong: ['37', '51'], swap: false },
+  { index: 8, kind: 'T', number: '45', wrong: ['43', '15'], swap: false },
 ];
+
+// ─── Colour helpers: lightness jitter applied in linear light ─────────────────
+const toLinear = (v) => (v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+const toSrgb   = (l) => (l <= 0.0031308 ? 12.92 * l : 1.055 * Math.pow(l, 1 / 2.4) - 0.055);
+
+const hexToLinear = (hex) => [1, 3, 5].map(i => toLinear(parseInt(hex.slice(i, i + 2), 16) / 255));
+
+const scaledHex = (linear, factor) =>
+  '#' + linear.map(c => {
+    const v = Math.round(Math.min(1, Math.max(0, toSrgb(Math.min(1, c * factor)))) * 255);
+    return v.toString(16).padStart(2, '0');
+  }).join('');
+
+// Deterministic 0..1 value per dot, so plates look the same every render
+const unit = (i, salt) => {
+  const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
+  return x - Math.floor(x);
+};
 
 // Deterministic dot layout — same every render, no randomness
 // Uses a seeded pattern based on plate index and dot index
 const generateDots = (plate) => {
+  const pair   = PAIRS[plate.kind];
+  const figLin = hexToLinear(plate.swap ? pair.bg : pair.fg);
+  const bgLin  = hexToLinear(plate.swap ? pair.fg : pair.bg);
   const cx     = PLATE_SIZE / 2;
   const cy     = PLATE_SIZE / 2;
   const radius = PLATE_SIZE / 2 - 4 * PLATE_SCALE;
@@ -65,7 +90,11 @@ const generateDots = (plate) => {
     // Determine if this dot is part of the hidden number
     const inFigure = isInFigure(x, y, plate.number, cx, cy);
 
-    return { x, y, r: dotR, inFigure };
+    // Lightness jitter, identical in range for figure and background dots
+    const factor = 1 + (unit(i, plate.index + 1) * 2 - 1) * pair.jitter;
+    const fill   = scaledHex(inFigure ? figLin : bgLin, factor);
+
+    return { x, y, r: dotR, inFigure, fill };
   });
 };
 
@@ -158,7 +187,7 @@ const ColorPlate = ({ plateIndex = 0 }) => {
           cx={PLATE_SIZE / 2}
           cy={PLATE_SIZE / 2}
           r={PLATE_SIZE / 2 - 2 * PLATE_SCALE}
-          fill={plate.bgColor}
+          fill={scaledHex(hexToLinear(plate.swap ? PAIRS[plate.kind].fg : PAIRS[plate.kind].bg), 1)}
         />
 
         {/* Dots — figure colour or background colour. Fully opaque: alpha
@@ -170,7 +199,7 @@ const ColorPlate = ({ plateIndex = 0 }) => {
             cx={dot.x.toFixed(1)}
             cy={dot.y.toFixed(1)}
             r={dot.r}
-            fill={dot.inFigure ? plate.fgColor : plate.bgColor}
+            fill={dot.fill}
           />
         ))}
       </Svg>

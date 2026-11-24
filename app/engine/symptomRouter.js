@@ -7,6 +7,7 @@
 // Test identifiers — must match screen names in AppNavigator
 export const TESTS = {
   DISTANCE:    'TestDistance',
+  DUOCHROME:   'TestDuochrome',
   NEAR:        'TestNear',
   ASTIGMATISM: 'TestAstigmatism',
   CONTRAST:    'TestContrast',
@@ -17,6 +18,7 @@ export const TESTS = {
 // Standard test order — maintained across all paths
 export const TEST_ORDER = [
   TESTS.DISTANCE,
+  TESTS.DUOCHROME,
   TESTS.NEAR,
   TESTS.ASTIGMATISM,
   TESTS.CONTRAST,
@@ -29,14 +31,14 @@ export const FULL_CHECK_QUEUE = [...TEST_ORDER];
 
 // Symptom key → tests recommended
 const SYMPTOM_MAP = {
-  far:         [TESTS.DISTANCE],
+  far:         [TESTS.DISTANCE, TESTS.DUOCHROME],
   near:        [TESTS.NEAR],
-  blurry:      [TESTS.DISTANCE, TESTS.NEAR, TESTS.ASTIGMATISM],
+  blurry:      [TESTS.DISTANCE, TESTS.DUOCHROME, TESTS.NEAR, TESTS.ASTIGMATISM],
   wavy:        [TESTS.AMSLER],
   colours:     [TESTS.CONTRAST, TESTS.COLOR],
   colour_diff: [TESTS.COLOR],
   tired:       [TESTS.NEAR, TESTS.CONTRAST],
-  one_eye:     [TESTS.DISTANCE, TESTS.NEAR, TESTS.ASTIGMATISM, TESTS.CONTRAST, TESTS.AMSLER, TESTS.COLOR],
+  one_eye:     [TESTS.DISTANCE, TESTS.DUOCHROME, TESTS.NEAR, TESTS.ASTIGMATISM, TESTS.CONTRAST, TESTS.AMSLER, TESTS.COLOR],
 };
 
 /**

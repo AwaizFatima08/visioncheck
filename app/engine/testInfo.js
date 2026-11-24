@@ -35,8 +35,8 @@ const eyeName = (eye, isUrdu) =>
   eye === 'R' ? (isUrdu ? 'دائیں' : 'Right') : (isUrdu ? 'بائیں' : 'Left');
 
 const SIDE_TEXT = {
-  en: { red: 'red side clearer', green: 'green side clearer', equal: 'both equal' },
-  ur: { red: 'سرخ طرف صاف', green: 'سبز طرف صاف', equal: 'دونوں برابر' },
+  en: { red: 'red side clearer', green: 'green side clearer', equal: 'both equal', unsure: 'too blurry to tell' },
+  ur: { red: 'سرخ طرف صاف', green: 'سبز طرف صاف', equal: 'دونوں برابر', unsure: 'فیصلہ نہیں ہو سکا' },
 };
 
 const COLOR_TYPE_TEXT = {
@@ -93,15 +93,15 @@ export const describeDetail = (testName, result, language) => {
   } else if (testName === 'contrast') {
     const d = result.details;
     if (d && d.logcs != null) {
-      lines.push(isUrdu ? `کنٹراسٹ سکور: ${d.logcs.toFixed(2)} logCS` : `Contrast score: ${d.logcs.toFixed(2)} logCS`);
+      lines.push(isUrdu ? `کنٹراسٹ سکور: ${d.ceiling ? '≥ ' : ''}${d.logcs.toFixed(2)} logCS` : `Contrast score: ${d.ceiling ? '≥ ' : ''}${d.logcs.toFixed(2)} logCS`);
     } else if (d && d.below) {
       lines.push(isUrdu ? 'کنٹراسٹ سکور: 0.45 logCS سے کم' : 'Contrast score: below 0.45 logCS');
     }
   } else if (testName === 'color') {
     const d = result.details;
-    if (d && COLOR_TYPE_TEXT.en[d.type]) {
-      lines.push(COLOR_TYPE_TEXT[isUrdu ? 'ur' : 'en'][d.type]);
-    }
+    const table = COLOR_TYPE_TEXT[isUrdu ? 'ur' : 'en'];
+    if (d && table[d.type]) lines.push(table[d.type]);
+    if (d && d.blueYellow && d.type !== 'blueyellow' && d.type !== 'unreliable') lines.push(table.blueyellow);
   }
   return lines;
 };

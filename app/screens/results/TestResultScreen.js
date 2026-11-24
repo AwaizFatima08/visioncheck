@@ -16,6 +16,7 @@ import { ALERT, ALERT_STYLE } from '../../engine/alertLogic';
 import { getNextTest, getTestProgress } from '../../engine/symptomRouter';
 import { speakPrompt } from '../../audio/speech';
 import { TEST_LABELS, describeDetail } from '../../engine/testInfo';
+import { amslerComparisonLines } from '../../engine/amslerTrend';
 
 // ─── Plain language explanations per test and alert level ────────────────────
 const EXPLANATIONS = {
@@ -24,6 +25,11 @@ const EXPLANATIONS = {
       green:  { title: 'Distance vision appears normal',     body: 'You were able to read small letters at 40 cm. This suggests your distance vision is within normal range.' },
       yellow: { title: 'Slight difficulty at distance',      body: 'You had some difficulty reading smaller letters. This may suggest mild short-sightedness (myopia). Worth checking with a doctor.' },
       red:    { title: 'Difficulty seeing at distance',      body: 'You could only read larger letters at 40 cm. This suggests possible short-sightedness (myopia). Please see an eye doctor.' },
+    },
+    duochrome: {
+      green:  { title: 'Red and green sides look equally clear', body: 'Letters looked equally sharp on both colours. This suggests your eyes\' focus is well balanced.' },
+      yellow: { title: 'One colour looked clearer',              body: 'Letters looked clearer on one colour. Short-sighted eyes tend to favour red and long-sighted eyes green, so your focus may be slightly off. A full eye test can confirm.' },
+      red:    { title: 'One colour looked clearer',              body: 'Letters looked clearer on one colour. Short-sighted eyes tend to favour red and long-sighted eyes green, so your focus may be slightly off. A full eye test can confirm.' },
     },
     near: {
       green:  { title: 'Near vision appears normal',         body: 'You were able to read small text at reading distance. Your near vision is within normal range.' },
@@ -56,6 +62,11 @@ const EXPLANATIONS = {
       green:  { title: 'دور کی نظر معمول کے مطابق ہے',         body: 'آپ نے ۴۰ سینٹی میٹر پر چھوٹے حروف پڑھ لیے۔ اس سے لگتا ہے کہ آپ کی دور کی نظر ٹھیک ہے۔' },
       yellow: { title: 'دور کی نظر میں معمولی دشواری',          body: 'آپ کو چھوٹے حروف پڑھنے میں کچھ تکلیف ہوئی۔ یہ ہلکی دور کی نظر کمزوری (myopia) کی علامت ہو سکتی ہے۔' },
       red:    { title: 'دور کی نظر میں دشواری',                 body: 'آپ صرف بڑے حروف پڑھ سکے۔ یہ دور کی نظر کمزوری (myopia) کی علامت ہو سکتی ہے۔ براہ کرم آنکھوں کے ڈاکٹر سے ملیں۔' },
+    },
+    duochrome: {
+      green:  { title: 'سرخ اور سبز دونوں طرف برابر صاف',      body: 'دونوں رنگوں پر حروف برابر صاف نظر آئے۔ اس سے لگتا ہے کہ آنکھوں کا فوکس متوازن ہے۔' },
+      yellow: { title: 'ایک رنگ پر حروف زیادہ صاف نظر آئے',    body: 'ایک رنگ پر حروف زیادہ صاف تھے۔ دور کی نظر کمزور آنکھیں عموماً سرخ اور قریب کی نظر کمزور آنکھیں سبز کو ترجیح دیتی ہیں، یعنی فوکس تھوڑا غیر متوازن ہو سکتا ہے۔ مکمل معائنہ تصدیق کر سکتا ہے۔' },
+      red:    { title: 'ایک رنگ پر حروف زیادہ صاف نظر آئے',    body: 'ایک رنگ پر حروف زیادہ صاف تھے۔ دور کی نظر کمزور آنکھیں عموماً سرخ اور قریب کی نظر کمزور آنکھیں سبز کو ترجیح دیتی ہیں، یعنی فوکس تھوڑا غیر متوازن ہو سکتا ہے۔ مکمل معائنہ تصدیق کر سکتا ہے۔' },
     },
     near: {
       green:  { title: 'قریب کی نظر معمول کے مطابق ہے',        body: 'آپ نے پڑھنے کی دوری پر چھوٹا متن پڑھ لیا۔ آپ کی قریب کی نظر ٹھیک ہے۔' },
@@ -99,6 +110,7 @@ const getExplanation = (testName, alertLevel, language) => {
 // lowercase test name (e.g. 'distance'). This maps one to the other.
 const SCREEN_TO_RESULT_KEY = {
   TestDistance:    'distance',
+  TestDuochrome:   'duochrome',
   TestNear:        'near',
   TestAstigmatism: 'astigmatism',
   TestContrast:    'contrast',
@@ -135,7 +147,10 @@ const TestResultScreen = ({ navigation, route }) => {
   const explanation = getExplanation(resultKey, worstAlert, language);
   const testLabel  = (TEST_LABELS[language] || TEST_LABELS.en)[resultKey];
   const nextTest   = getNextTest(testQueue, currentTest);
-  const detailLines = describeDetail(resultKey, result, language);
+  const detailLines = [
+    ...describeDetail(resultKey, result, language),
+    ...(resultKey === 'amsler' ? amslerComparisonLines(result, language) : []),
+  ];
 
   // Speak result on load
   useEffect(() => {

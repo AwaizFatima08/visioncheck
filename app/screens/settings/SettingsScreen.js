@@ -196,6 +196,16 @@ const SettingsScreen = ({ navigation, route }) => {
             </View>
             <Feather name={isUrdu ? 'chevron-left' : 'chevron-right'} size={18} color="#9EA3AB" />
           </TouchableOpacity>
+          <TouchableOpacity style={[styles.settingRow, styles.settingRowBorder]} onPress={() => navigation.navigate('Reminders', { language })} activeOpacity={0.8}>
+            <View style={styles.settingLeft}>
+              <Text style={styles.settingIcon}>🔔</Text>
+              <View>
+                <Text style={[styles.settingTitle, isUrdu && styles.rtl]}>{isUrdu ? 'یاد دہانیاں' : 'Reminders'}</Text>
+                <Text style={[styles.settingDesc, isUrdu && styles.rtl]}>{isUrdu ? 'ماہانہ جالی ٹیسٹ اور معائنہ' : 'Monthly Amsler check and eye exam'}</Text>
+              </View>
+            </View>
+            <Feather name={isUrdu ? 'chevron-left' : 'chevron-right'} size={18} color="#9EA3AB" />
+          </TouchableOpacity>
           {privacyOptions && (
             <TouchableOpacity style={[styles.settingRow, styles.settingRowBorder]} onPress={showPrivacyOptions} activeOpacity={0.8}>
               <View style={styles.settingLeft}>

@@ -16,12 +16,14 @@ import DisclaimerScreen     from '../screens/onboarding/DisclaimerScreen';
 // ─── Home screens ─────────────────────────────────────────────────────────────
 import HomeScreen            from '../screens/home/HomeScreen';
 import AgeBandScreen         from '../screens/home/AgeBandScreen';
+import RiskCheckScreen       from '../screens/home/RiskCheckScreen';
 import SymptomSelectorScreen from '../screens/home/SymptomSelectorScreen';
 import RecommendedTestsScreen from '../screens/home/RecommendedTestsScreen';
 import PreTestSetupScreen    from '../screens/home/PreTestSetupScreen';
 
 // ─── Test screens ─────────────────────────────────────────────────────────────
 import TestDistanceScreen    from '../screens/tests/TestDistanceScreen';
+import TestDuochromeScreen   from '../screens/tests/TestDuochromeScreen';
 import TestNearScreen        from '../screens/tests/TestNearScreen';
 import TestAstigmatismScreen from '../screens/tests/TestAstigmatismScreen';
 import TestContrastScreen    from '../screens/tests/TestContrastScreen';
@@ -40,6 +42,8 @@ import HistoryDetailScreen from '../screens/history/HistoryDetailScreen';
 import SettingsScreen       from '../screens/settings/SettingsScreen';
 import DisclaimerViewScreen from '../screens/settings/DisclaimerViewScreen';
 import CalibrationScreen    from '../screens/settings/CalibrationScreen';
+import RemindersScreen      from '../screens/settings/RemindersScreen';
+import TrendsScreen         from '../screens/history/TrendsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab   = createBottomTabNavigator();
@@ -119,12 +123,14 @@ const AppNavigator = () => {
 
         {/* Assessment flow */}
         <Stack.Screen name="AgeBand"           component={AgeBandScreen} />
+        <Stack.Screen name="RiskCheck"         component={RiskCheckScreen} />
         <Stack.Screen name="SymptomSelector"   component={SymptomSelectorScreen} />
         <Stack.Screen name="RecommendedTests"  component={RecommendedTestsScreen} />
         <Stack.Screen name="PreTestSetup"      component={PreTestSetupScreen} />
 
         {/* Tests */}
         <Stack.Screen name="TestDistance"    component={TestDistanceScreen} />
+        <Stack.Screen name="TestDuochrome"   component={TestDuochromeScreen} />
         <Stack.Screen name="TestNear"        component={TestNearScreen} />
         <Stack.Screen name="TestAstigmatism" component={TestAstigmatismScreen} />
         <Stack.Screen name="TestContrast"    component={TestContrastScreen} />
@@ -141,6 +147,8 @@ const AppNavigator = () => {
         {/* Settings */}
         <Stack.Screen name="DisclaimerView" component={DisclaimerViewScreen} />
         <Stack.Screen name="Calibration"    component={CalibrationScreen} />
+        <Stack.Screen name="Reminders"      component={RemindersScreen} />
+        <Stack.Screen name="Trends"         component={TrendsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

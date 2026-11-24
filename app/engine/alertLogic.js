@@ -56,6 +56,17 @@ export const getAstigAlert = (response) => {
   }
 };
 
+// Duochrome: equal clarity is balanced focus; a preference for red or green hints at
+// a focus error, which is worth a proper refraction but is never urgent on its own.
+export const getDuochromeAlert = (response) => {
+  switch (response) {
+    case 'equal': return ALERT.GREEN;
+    case 'red':
+    case 'green': return ALERT.YELLOW;
+    default:      return ALERT.YELLOW;
+  }
+};
+
 export const getContrastAlert = (response) => {
   switch (response) {
     case 'all_4':   return ALERT.GREEN;
@@ -75,13 +86,6 @@ export const getAmslerAlert = (response) => {
     case 'distorted':    return ALERT.URGENT;
     default:             return ALERT.YELLOW;
   }
-};
-
-export const getColorAlert = (correctCount, totalPlates) => {
-  const ratio = correctCount / totalPlates;
-  if (ratio === 1)    return ALERT.GREEN;
-  if (ratio >= 0.66)  return ALERT.YELLOW;
-  return ALERT.RED;
 };
 
 // ─── Overall alert — takes array of all individual alert levels ───────────────

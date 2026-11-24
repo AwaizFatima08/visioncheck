@@ -7,7 +7,7 @@
 // Audio prompt plays on each new E in selected language.
 // Viewing distance: 40cm (elbow bent, closer than arm's length).
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View, Text, TouchableOpacity,
   StyleSheet, SafeAreaView,
@@ -47,10 +47,13 @@ const TestDistanceScreen = ({ navigation, route }) => {
   const [rotation,  setRotation]  = useState(() => getRandomRotation());
   const [resultR,   setResultR]   = useState(null);
   const [feedback,  setFeedback]  = useState(null); // 'correct' | 'wrong' | null
+  const [rowRight,  setRowRight]  = useState(0);    // correct answers on this row
+  const [rowWrong,  setRowWrong]  = useState(0);    // wrong answers on this row
+  const [answered,  setAnswered]  = useState(0);    // answers given for this eye
 
   const currentEye = EYES[eyeStep];
 
-  // Speak instructions when eye changes or row changes
+  // Speak instructions when eye changes
   useEffect(() => {
     const coverKey = currentEye === 'R' ? 'coverLeft' : 'coverRight';
     speakDistance('arm', language);
@@ -58,14 +61,23 @@ const TestDistanceScreen = ({ navigation, route }) => {
     setTimeout(() => speakEPrompt(language), 3600);
   }, [eyeStep]);
 
-  // Speak E prompt on each new row
+  // Speak the E prompt for every E after the first
   useEffect(() => {
-    if (rowIndex > 0) {
+    if (answered > 0) {
       setTimeout(() => speakEPrompt(language), 400);
     }
-  }, [rowIndex, rotation]);
+  }, [answered]);
 
-  const answer = useCallback((isCorrect) => {
+  // A new E that never repeats the previous direction
+  const nextRotation = () => {
+    let r = getRandomRotation();
+    while (r === rotation) r = getRandomRotation();
+    return r;
+  };
+
+  // A row is passed with 2 correct and failed with 2 wrong (at most 3 Es per row),
+  // which keeps a lucky guess or a single slip from deciding the result.
+  const answer = (isCorrect) => {
     const rows = TEST_SIZES.snellen;
     const last = rows.length - 1;
     speakFeedback(isCorrect, language);
@@ -73,27 +85,43 @@ const TestDistanceScreen = ({ navigation, route }) => {
 
     setTimeout(() => {
       setFeedback(null);
+      setAnswered(n => n + 1);
+      const right = rowRight + (isCorrect ? 1 : 0);
+      const wrong = rowWrong + (isCorrect ? 0 : 1);
 
-      if (isCorrect && rowIndex < last) {
-        // Correct — move to next smaller row with new random rotation
-        setRowIndex(prev => prev + 1);
-        setRotation(getRandomRotation());
-      } else {
-        // Wrong or reached smallest row — record the finest row passed
-        const passedIndex = isCorrect ? rowIndex : rowIndex - 1;
+      if (right >= 2 && rowIndex < last) {
+        setRowIndex(rowIndex + 1);
+        setRowRight(0);
+        setRowWrong(0);
+        setRotation(nextRotation());
+      } else if (right >= 2 || wrong >= 2) {
+        const passedIndex = right >= 2 ? rowIndex : rowIndex - 1;
         const den = passedIndex >= 0 ? rows[passedIndex].den : null;
-        finishEye({ responseKey: denToResponse(den), acuity: den == null ? null : `20/${den}` });
+        finishEye({
+          responseKey: denToResponse(den),
+          details: {
+            acuity: den == null ? null : `20/${den}`,
+            logmar: den == null ? null : Math.round(Math.log10(den / 20) * 100) / 100,
+          },
+        });
+      } else {
+        setRowRight(right);
+        setRowWrong(wrong);
+        setRotation(nextRotation());
       }
     }, 600);
-  }, [rotation, rowIndex, eyeStep]);
+  };
 
   const handleDirection = (tappedRotation) => answer(tappedRotation === rotation);
 
-  const finishEye = ({ responseKey, acuity }) => {
+  const finishEye = ({ responseKey, details }) => {
     if (eyeStep === 0) {
-      setResultR({ responseKey, acuity });
+      setResultR({ responseKey, details });
       setEyeStep(1);
       setRowIndex(0);
+      setRowRight(0);
+      setRowWrong(0);
+      setAnswered(0);
       setRotation(getRandomRotation());
     } else {
       // Both eyes done
@@ -105,8 +133,8 @@ const TestDistanceScreen = ({ navigation, route }) => {
         testName:  'distance',
         responseR: resultR.responseKey,
         responseL: responseKey,
-        acuityR: resultR.acuity,
-        acuityL: acuity,
+        detailsR:  resultR.details,
+        detailsL:  details,
         alertR, alertL, diffAlert,
       };
 
@@ -187,6 +215,11 @@ const TestDistanceScreen = ({ navigation, route }) => {
 
       {/* Tumbling E chart */}
       <SnellenChart rowIndex={rowIndex} rotation={rotation} />
+      <Text style={[styles.trialNote, isUrdu && styles.rtl]}>
+        {isUrdu
+          ? `حرف ${rowRight + rowWrong + 1} از ۳`
+          : `Letter ${rowRight + rowWrong + 1} of up to 3 on this size`}
+      </Text>
 
       {/* Feedback flash */}
       {feedback && (
@@ -280,6 +313,7 @@ const styles = StyleSheet.create({
   badgeIcon:      { fontSize: 16 },
   distanceText:   { fontSize: 13, color: '#1A6FD4', flex: 1, fontWeight: '500' },
 
+  trialNote:      { fontSize: 11, color: '#9EA3AB', textAlign: 'center', marginTop: -6, marginBottom: 4 },
   floorNote:      { fontSize: 11, color: '#5A5D63', marginBottom: 6 },
 
   coverBadge:     { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FAEEDA', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 8, marginBottom: 8 },

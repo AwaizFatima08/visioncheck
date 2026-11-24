@@ -3,7 +3,7 @@
 //
 // Shows recommended tests based on symptoms selected.
 // Speaks test list on load.
-// Option to run recommended tests or all 6.
+// Option to run recommended tests or all of them.
 
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
@@ -22,6 +22,7 @@ const ALL_TESTS = FULL_CHECK_QUEUE;
 const TEST_META = {
   en: {
     TestDistance:    { icon:'🔭', name:'Distance Vision',      sub:'Short-sightedness check' },
+    TestDuochrome:   { icon:'🔴', name:'Red-Green Balance',    sub:'Short vs long-sighted tendency' },
     TestNear:        { icon:'📖', name:'Near Vision',           sub:'Long-sightedness & presbyopia' },
     TestAstigmatism: { icon:'〰️', name:'Astigmatism Check',    sub:'Uneven lens curvature' },
     TestContrast:    { icon:'🌫️', name:'Contrast Sensitivity', sub:'Early cataracts indicator' },
@@ -30,6 +31,7 @@ const TEST_META = {
   },
   ur: {
     TestDistance:    { icon:'🔭', name:'دور کے نظر کا ٹیسٹ',    sub:'دور کی نظر کمزوری' },
+    TestDuochrome:   { icon:'🔴', name:'سرخ-سبز توازن',         sub:'دور یا قریب کی نظر کا رجحان' },
     TestNear:        { icon:'📖', name:'قریب کے نظر کا ٹیسٹ',   sub:'قریب کی نظر اور presbyopia' },
     TestAstigmatism: { icon:'〰️', name:'لکیروں کا ٹیسٹ',       sub:'آنکھ کے عدسے کی بے قاعدگی' },
     TestContrast:    { icon:'🌫️', name:'دھندلا پن کا ٹیسٹ',    sub:'موتیے کی ابتدائی علامت' },
