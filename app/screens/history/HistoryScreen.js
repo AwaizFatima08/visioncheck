@@ -16,6 +16,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getAllAssessments, clearAllHistory, getSetting } from '../../database/db';
 import { ALERT_STYLE, ALERT } from '../../engine/alertLogic';
 import { formatDate, relativeDate, ageBandLabel } from '../../utils/dateFormatter';
+import AdBanner from '../../ads/AdBanner';
 
 const speak = (text, lang) => {
   Speech.stop();
@@ -159,6 +160,7 @@ const HistoryScreen = ({ navigation, route }) => {
         onRefresh={loadData}
         refreshing={loading}
       />
+      <AdBanner placement="history" />
     </SafeAreaView>
   );
 };

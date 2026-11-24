@@ -21,6 +21,9 @@
     "production": {
       "android": {
         "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_ADS_LIVE": "true"
       }
     }
   }

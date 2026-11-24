@@ -16,6 +16,7 @@ import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
 import { getSetting, setSetting, clearAllHistory } from '../../database/db';
 import { strings } from '../../i18n/strings';
+import { isPrivacyOptionsRequired, showPrivacyOptions } from '../../ads/initAds';
 
 // Read from app.json (the single source of truth for the shipped version)
 // instead of a hardcoded string that silently drifts out of sync with it.
@@ -45,6 +46,7 @@ const SettingsScreen = ({ navigation, route }) => {
   const [language,      setLanguage]      = useState(route.params?.language || 'en');
   const [ageBand,       setAgeBand]       = useState('young');
   const [showAgePicker, setShowAgePicker] = useState(false);
+  const [privacyOptions, setPrivacyOptions] = useState(false);
   const isUrdu = language === 'ur';
   const s      = strings[language];
   const bands  = AGE_BANDS[language] || AGE_BANDS.en;
@@ -52,6 +54,7 @@ const SettingsScreen = ({ navigation, route }) => {
   useFocusEffect(
     useCallback(() => {
       loadSettings();
+      setPrivacyOptions(isPrivacyOptionsRequired());
     }, [])
   );
 
@@ -177,6 +180,15 @@ const SettingsScreen = ({ navigation, route }) => {
             </View>
             <Feather name={isUrdu ? 'chevron-left' : 'chevron-right'} size={18} color="#9EA3AB" />
           </TouchableOpacity>
+          {privacyOptions && (
+            <TouchableOpacity style={[styles.settingRow, styles.settingRowBorder]} onPress={showPrivacyOptions} activeOpacity={0.8}>
+              <View style={styles.settingLeft}>
+                <Text style={styles.settingIcon}>🔒</Text>
+                <Text style={[styles.settingTitle, isUrdu && styles.rtl]}>{isUrdu ? 'اشتہارات کی رازداری' : 'Ad privacy options'}</Text>
+              </View>
+              <Feather name={isUrdu ? 'chevron-left' : 'chevron-right'} size={18} color="#9EA3AB" />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity style={[styles.settingRow, styles.settingRowBorder]} onPress={handleClearHistory} activeOpacity={0.8}>
             <View style={styles.settingLeft}>
               <Text style={styles.settingIcon}>🗑️</Text>

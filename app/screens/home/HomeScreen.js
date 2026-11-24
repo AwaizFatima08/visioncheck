@@ -11,6 +11,7 @@ import * as Speech from 'expo-speech';
 import { useFocusEffect } from '@react-navigation/native';
 import { strings } from '../../i18n/strings';
 import { getSetting } from '../../database/db';
+import AdBanner from '../../ads/AdBanner';
 
 const speak = (text, lang, onDone) => {
   Speech.stop();
@@ -121,6 +122,7 @@ const HomeScreen = ({ navigation, route }) => {
         </View>
 
       </ScrollView>
+      <AdBanner placement="home" />
     </SafeAreaView>
   );
 };
