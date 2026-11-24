@@ -12,6 +12,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { strings } from '../../i18n/strings';
 import { getSetting } from '../../database/db';
 import AdBanner from '../../ads/AdBanner';
+import { FULL_CHECK_QUEUE } from '../../engine/symptomRouter';
 
 const speak = (text, lang, onDone) => {
   Speech.stop();
@@ -55,7 +56,7 @@ const HomeScreen = ({ navigation, route }) => {
     navigation.navigate('AgeBand', {
       language,
       nextScreen: 'PreTestSetup',
-      nextParams: { language, testQueue: ['TestDistance','TestNear','TestAstigmatism','TestContrast','TestAmsler','TestColor'] },
+      nextParams: { language, testQueue: FULL_CHECK_QUEUE },
     });
   };
 

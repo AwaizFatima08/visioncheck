@@ -15,6 +15,7 @@ import { Feather } from '@expo/vector-icons';
 import { ALERT, ALERT_STYLE } from '../../engine/alertLogic';
 import { getNextTest, getTestProgress } from '../../engine/symptomRouter';
 import { speakPrompt } from '../../audio/speech';
+import { TEST_LABELS, describeDetail } from '../../engine/testInfo';
 
 // ─── Plain language explanations per test and alert level ────────────────────
 const EXPLANATIONS = {
@@ -106,25 +107,6 @@ const SCREEN_TO_RESULT_KEY = {
 };
 
 // Human-readable test names
-const TEST_LABELS = {
-  en: {
-    distance:    'Distance Vision',
-    near:        'Near Vision',
-    astigmatism: 'Astigmatism Check',
-    contrast:    'Contrast Sensitivity',
-    amsler:      'Amsler Grid',
-    color:       'Colour Vision',
-  },
-  ur: {
-    distance:    'دور کے نظر کا ٹیسٹ',
-    near:        'قریب کے نظر کا ٹیسٹ',
-    astigmatism: 'لکیروں کا ٹیسٹ',
-    contrast:    'دھندلا پن کا ٹیسٹ',
-    amsler:      'جالی کا ٹیسٹ',
-    color:       'رنگوں کا ٹیسٹ',
-  },
-};
-
 const TestResultScreen = ({ navigation, route }) => {
   const {
     language, ageBand, testQueue,
@@ -153,6 +135,7 @@ const TestResultScreen = ({ navigation, route }) => {
   const explanation = getExplanation(resultKey, worstAlert, language);
   const testLabel  = (TEST_LABELS[language] || TEST_LABELS.en)[resultKey];
   const nextTest   = getNextTest(testQueue, currentTest);
+  const detailLines = describeDetail(resultKey, result, language);
 
   // Speak result on load
   useEffect(() => {
@@ -221,12 +204,12 @@ const TestResultScreen = ({ navigation, route }) => {
               {isUrdu ? 'آنکھوں کے مطابق نتائج' : 'Results by eye'}
             </Text>
             <EyeRow
-              label={(isUrdu ? '👁 دائیں آنکھ' : '👁 Right Eye') + acuityText(result.acuityR)}
+              label={(isUrdu ? '👁 دائیں آنکھ' : '👁 Right Eye')}
               alertLevel={result.alertR}
               isUrdu={isUrdu}
             />
             <EyeRow
-              label={(isUrdu ? '👁 بائیں آنکھ' : '👁 Left Eye') + acuityText(result.acuityL)}
+              label={(isUrdu ? '👁 بائیں آنکھ' : '👁 Left Eye')}
               alertLevel={result.alertL}
               isUrdu={isUrdu}
             />
@@ -240,6 +223,14 @@ const TestResultScreen = ({ navigation, route }) => {
                 </Text>
               </View>
             )}
+          </View>
+        )}
+
+        {detailLines.length > 0 && (
+          <View style={styles.detailBox}>
+            {detailLines.map((line, i) => (
+              <Text key={i} style={[styles.detailText, isUrdu && styles.rtl]}>{line}</Text>
+            ))}
           </View>
         )}
 
@@ -289,9 +280,6 @@ const TestResultScreen = ({ navigation, route }) => {
 };
 
 // ─── Eye Row Component ────────────────────────────────────────────────────────
-// Distance test only: undefined = test has no acuity, null = could not read the largest row
-const acuityText = (acuity) => (acuity === undefined ? '' : ` · ${acuity === null ? '<20/200' : acuity}`);
-
 const EyeRow = ({ label, alertLevel, isUrdu }) => {
   const style = ALERT_STYLE[alertLevel] || ALERT_STYLE[ALERT.GREEN];
   return (
@@ -315,6 +303,8 @@ const eyeRowStyles = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
+  detailBox:  { backgroundColor: '#FFFFFF', borderRadius: 12, borderWidth: 1, borderColor: '#E2E4E8', padding: 14, marginBottom: 12 },
+  detailText: { fontSize: 13, color: '#1A1C1E', marginVertical: 2 },
   safe:    { flex: 1, backgroundColor: '#F5F6F8' },
   content: { padding: 20, paddingTop: 16 },
   rtl:     { textAlign: 'right', writingDirection: 'rtl', fontFamily: 'NotoNastaliqUrdu' },

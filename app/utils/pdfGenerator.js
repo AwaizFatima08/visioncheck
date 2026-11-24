@@ -9,6 +9,7 @@ import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
 import { ALERT } from '../engine/alertLogic';
+import { TEST_LABELS, describeDetail } from '../engine/testInfo';
 
 // expo-print's PDF renderer only has access to fonts actually reachable from
 // the HTML it's given — a font-family name alone (even a real one) resolves
@@ -32,11 +33,6 @@ const ALERT_CSS = {
   [ALERT.YELLOW]: { bg: '#FAEEDA', text: '#854F0B', border: '#FAC775', label: { en: 'Mild',     ur: 'معمولی'  } },
   [ALERT.RED]:    { bg: '#FAECE7', text: '#993C1D', border: '#F5C4B3', label: { en: 'See Doctor', ur: 'ڈاکٹر دیکھیں' } },
   [ALERT.URGENT]: { bg: '#FCEBEB', text: '#A32D2D', border: '#F7C1C1', label: { en: 'Urgent',   ur: 'فوری'    } },
-};
-
-const TEST_LABELS = {
-  en: { distance: 'Distance Vision', near: 'Near Vision', astigmatism: 'Astigmatism', contrast: 'Contrast Sensitivity', amsler: 'Amsler Grid (Macular)', color: 'Colour Vision' },
-  ur: { distance: 'دور کے نظر کا ٹیسٹ', near: 'قریب کے نظر کا ٹیسٹ', astigmatism: 'لکیروں کا ٹیسٹ', contrast: 'دھندلا پن کا ٹیسٹ', amsler: 'جالی کا ٹیسٹ', color: 'رنگوں کا ٹیسٹ' },
 };
 
 const AGE_BAND_LABELS = {
@@ -101,6 +97,10 @@ const buildTestRows = (assessmentResults, language) => {
     if (result.eye === 'both') {
       eyeRows = `<div class="eye-row"><span>${isUrdu ? 'دونوں آنکھیں' : 'Both eyes'}</span></div>`;
     }
+
+    describeDetail(testName, result, language).forEach((line) => {
+      eyeRows += `<div class="eye-row"><span>${line}</span></div>`;
+    });
 
     if (testName === 'color' && result.correctCount !== undefined) {
       eyeRows += `<div class="eye-row"><span>${isUrdu ? 'درست جوابات' : 'Correct answers'}: ${result.correctCount}/${result.totalPlates}</span></div>`;

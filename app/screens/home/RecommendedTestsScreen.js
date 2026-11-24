@@ -10,13 +10,14 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView } fr
 import { Feather } from '@expo/vector-icons';
 import * as Speech from 'expo-speech';
 import { strings } from '../../i18n/strings';
+import { FULL_CHECK_QUEUE } from '../../engine/symptomRouter';
 
 const speak = (text, lang, onDone) => {
   Speech.stop();
   Speech.speak(text, { language: lang === 'ur' ? 'ur-PK' : 'en-US', rate: 0.85, onDone: onDone || (() => {}), onError: () => {} });
 };
 
-const ALL_TESTS = ['TestDistance','TestNear','TestAstigmatism','TestContrast','TestAmsler','TestColor'];
+const ALL_TESTS = FULL_CHECK_QUEUE;
 
 const TEST_META = {
   en: {

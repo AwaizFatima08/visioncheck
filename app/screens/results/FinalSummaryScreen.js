@@ -17,6 +17,7 @@ import { ALERT, ALERT_STYLE, getOverallAlert } from '../../engine/alertLogic';
 import { createAssessment, saveTestResult, completeAssessment } from '../../database/db';
 import { generateAndSharePDF, shareAsText } from '../../utils/shareResults';
 import { speakPrompt } from '../../audio/speech';
+import { TEST_LABELS, encodeDetails, describeDetail } from '../../engine/testInfo';
 
 // ─── What to do next — per overall alert level ───────────────────────────────
 const NEXT_STEPS = {
@@ -34,10 +35,6 @@ const NEXT_STEPS = {
   },
 };
 
-const TEST_LABELS = {
-  en: { distance: 'Distance Vision', near: 'Near Vision', astigmatism: 'Astigmatism', contrast: 'Contrast Sensitivity', amsler: 'Amsler Grid', color: 'Colour Vision' },
-  ur: { distance: 'دور کے نظر', near: 'قریب کے نظر', astigmatism: 'لکیروں کا ٹیسٹ', contrast: 'دھندلا پن', amsler: 'جالی کا ٹیسٹ', color: 'رنگوں کا ٹیسٹ' },
-};
 
 const FinalSummaryScreen = ({ navigation, route }) => {
   const { language, ageBand, assessmentResults } = route.params;
@@ -65,9 +62,9 @@ const FinalSummaryScreen = ({ navigation, route }) => {
         const id = await createAssessment('completed', ageBand, language);
         // Save each test result
         for (const [testName, result] of Object.entries(assessmentResults)) {
-          if (result.alertR) await saveTestResult(id, testName, 'R', result.responseR, result.alertR);
-          if (result.alertL) await saveTestResult(id, testName, 'L', result.responseL, result.alertL);
-          if (result.alert)  await saveTestResult(id, testName, 'both', result.response, result.alert);
+          if (result.alertR) await saveTestResult(id, testName, 'R', result.responseR, result.alertR, encodeDetails(result.detailsR));
+          if (result.alertL) await saveTestResult(id, testName, 'L', result.responseL, result.alertL, encodeDetails(result.detailsL));
+          if (result.alert)  await saveTestResult(id, testName, 'both', result.response, result.alert, encodeDetails(result.details));
         }
         await completeAssessment(id, overallAlert);
         setAssessmentId(id);

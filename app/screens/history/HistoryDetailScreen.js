@@ -16,19 +16,7 @@ import { getAssessmentById, getTestResultsForAssessment } from '../../database/d
 import { ALERT, ALERT_STYLE, getOverallAlert } from '../../engine/alertLogic';
 import { formatDate, ageBandLabel } from '../../utils/dateFormatter';
 import { generateAndSharePDF, shareAsText } from '../../utils/shareResults';
-
-const TEST_LABELS = {
-  en: {
-    distance: 'Distance Vision', near: 'Near Vision',
-    astigmatism: 'Astigmatism', contrast: 'Contrast Sensitivity',
-    amsler: 'Amsler Grid', color: 'Colour Vision',
-  },
-  ur: {
-    distance: 'دور کے نظر', near: 'قریب کے نظر',
-    astigmatism: 'لکیروں کا ٹیسٹ', contrast: 'دھندلا پن',
-    amsler: 'جالی کا ٹیسٹ', color: 'رنگوں کا ٹیسٹ',
-  },
-};
+import { TEST_LABELS, decodeDetails, describeDetail } from '../../engine/testInfo';
 
 const EYE_LABELS = {
   en: { R: '👁 Right Eye', L: '👁 Left Eye', both: '👁 Both Eyes' },
@@ -70,9 +58,10 @@ const HistoryDetailScreen = ({ navigation, route }) => {
     const results = {};
     testResults.forEach(row => {
       if (!results[row.test_name]) results[row.test_name] = {};
-      if (row.eye === 'R')    { results[row.test_name].alertR = row.alert_level; results[row.test_name].responseR = row.response; }
-      if (row.eye === 'L')    { results[row.test_name].alertL = row.alert_level; results[row.test_name].responseL = row.response; }
-      if (row.eye === 'both') { results[row.test_name].alert  = row.alert_level; results[row.test_name].response  = row.response; results[row.test_name].eye = 'both'; }
+      const details = decodeDetails(row.notes);
+      if (row.eye === 'R')    { results[row.test_name].alertR = row.alert_level; results[row.test_name].responseR = row.response; results[row.test_name].detailsR = details; }
+      if (row.eye === 'L')    { results[row.test_name].alertL = row.alert_level; results[row.test_name].responseL = row.response; results[row.test_name].detailsL = details; }
+      if (row.eye === 'both') { results[row.test_name].alert  = row.alert_level; results[row.test_name].response  = row.response; results[row.test_name].eye = 'both'; results[row.test_name].details = details; }
     });
     return results;
   };
@@ -132,6 +121,7 @@ const HistoryDetailScreen = ({ navigation, route }) => {
   const eyeLabels    = EYE_LABELS[language]  || EYE_LABELS.en;
 
   // Group test results by test name
+  const builtResults = buildAssessmentResults();
   const grouped = {};
   testResults.forEach(row => {
     if (!grouped[row.test_name]) grouped[row.test_name] = [];
@@ -238,6 +228,9 @@ const HistoryDetailScreen = ({ navigation, route }) => {
                   </View>
                 );
               })}
+              {describeDetail(testName, builtResults[testName], language).map((line, i) => (
+                <Text key={`d${i}`} style={[styles.detailLine, isUrdu && styles.rtl]}>{line}</Text>
+              ))}
             </View>
           );
         })}
@@ -337,6 +330,7 @@ const styles = StyleSheet.create({
   eyeRow:     { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6, borderTopWidth: 1, borderTopColor: '#F5F6F8' },
   eyeRowLast: { borderBottomWidth: 0 },
   eyeLabel:   { fontSize: 13, color: '#5A5D63', flex: 1 },
+  detailLine: { fontSize: 12, color: '#5A5D63', marginTop: 6 },
 
   pill:     { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 10, paddingVertical: 3, borderRadius: 20, borderWidth: 1 },
   pillText: { fontSize: 11, fontWeight: '600' },

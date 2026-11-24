@@ -11,6 +11,7 @@ import { Feather } from '@expo/vector-icons';
 import * as Speech from 'expo-speech';
 import { strings } from '../../i18n/strings';
 import { getSetting } from '../../database/db';
+import { FULL_CHECK_QUEUE } from '../../engine/symptomRouter';
 
 const speak = (text, lang, onDone) => {
   Speech.stop();
@@ -63,14 +64,14 @@ const PreTestSetupScreen = ({ navigation, route }) => {
   }, []);
 
   const getFirstTestScreen = () => {
-    const queue = Array.isArray(testQueue) ? testQueue : ['TestDistance','TestNear','TestAstigmatism','TestContrast','TestAmsler','TestColor'];
+    const queue = Array.isArray(testQueue) ? testQueue : FULL_CHECK_QUEUE;
     return queue[0] || 'TestDistance';
   };
 
   const proceed = () => {
     speak(isUrdu ? 'ٹیسٹ شروع ہو رہا ہے۔' : 'Starting tests.', language);
     const firstTest = getFirstTestScreen();
-    const queue     = Array.isArray(testQueue) ? testQueue : ['TestDistance','TestNear','TestAstigmatism','TestContrast','TestAmsler','TestColor'];
+    const queue     = Array.isArray(testQueue) ? testQueue : FULL_CHECK_QUEUE;
     navigation.navigate(firstTest, {
       language, ageBand,
       testQueue: queue,

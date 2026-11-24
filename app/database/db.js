@@ -170,4 +170,22 @@ export const getTestResultsForAssessment = (assessmentId) => {
   }
 };
 
+// All saved results for one test, oldest first, with the assessment date (for trends)
+export const getTestHistory = (testName) => {
+  try {
+    return db.getAllSync(
+      `SELECT tr.eye, tr.response, tr.alert_level, tr.notes,
+              a.id AS assessment_id, a.date
+         FROM test_results tr
+         JOIN assessments a ON a.id = tr.assessment_id
+        WHERE tr.test_name = ? AND a.completed = 1
+        ORDER BY a.date ASC`,
+      [testName]
+    );
+  } catch (err) {
+    console.error('getTestHistory error:', err);
+    return [];
+  }
+};
+
 export default db;

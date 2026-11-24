@@ -12,13 +12,9 @@ import * as FileSystem from 'expo-file-system';
 import { Alert } from 'react-native';
 import { generatePDF } from './pdfGenerator';
 import { ALERT } from '../engine/alertLogic';
+import { TEST_LABELS, describeDetail } from '../engine/testInfo';
 
 // ─── Test labels for text summary ────────────────────────────────────────────
-const TEST_LABELS = {
-  en: { distance: 'Distance Vision', near: 'Near Vision', astigmatism: 'Astigmatism', contrast: 'Contrast Sensitivity', amsler: 'Amsler Grid', color: 'Colour Vision' },
-  ur: { distance: 'دور کی نظر', near: 'قریب کی نظر', astigmatism: 'لکیروں کا ٹیسٹ', contrast: 'دھندلا پن', amsler: 'جالی کا ٹیسٹ', color: 'رنگوں کا ٹیسٹ' },
-};
-
 const ALERT_LABELS = {
   en: { green: 'Normal', yellow: 'Mild concern', red: 'See doctor', urgent: 'URGENT' },
   ur: { green: 'معمول', yellow: 'معمولی', red: 'ڈاکٹر دیکھیں', urgent: 'فوری' },
@@ -101,6 +97,7 @@ export const shareAsText = async (assessmentResults, overallAlert, language, age
         lines.push(`  دائیں آنکھ: ${(ALERT_LABELS.ur)[result.alertR] || result.alertR}`);
         lines.push(`  بائیں آنکھ: ${(ALERT_LABELS.ur)[result.alertL] || result.alertL}`);
       }
+      describeDetail(testName, result, 'ur').forEach(l => lines.push(`  ${l}`));
     });
     lines.push('');
     lines.push('⚠️ یہ طبی تشخیص نہیں ہے۔ اپنے ڈاکٹر سے تصدیق کروائیں۔');
@@ -118,6 +115,7 @@ export const shareAsText = async (assessmentResults, overallAlert, language, age
         lines.push(`  Right eye: ${(ALERT_LABELS.en)[result.alertR] || result.alertR}`);
         lines.push(`  Left eye:  ${(ALERT_LABELS.en)[result.alertL] || result.alertL}`);
       }
+      describeDetail(testName, result, 'en').forEach(l => lines.push(`  ${l}`));
     });
     lines.push('');
     lines.push('⚠️ This is not a medical diagnosis. Please confirm with your eye doctor.');

@@ -24,6 +24,9 @@ export const TEST_ORDER = [
   TESTS.COLOR,
 ];
 
+// Every test, in order — the Full Eye Check queue
+export const FULL_CHECK_QUEUE = [...TEST_ORDER];
+
 // Symptom key → tests recommended
 const SYMPTOM_MAP = {
   far:         [TESTS.DISTANCE],
