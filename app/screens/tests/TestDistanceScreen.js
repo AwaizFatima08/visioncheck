@@ -3,9 +3,9 @@
 //
 // Tests each eye separately using the Tumbling E protocol.
 // One E shown at a time, random rotation, user taps direction arrow.
-// Correct → next smaller row. Wrong → record limit, move to next eye.
+// Correct → next smaller row. Wrong or "can't see" → record limit, move to next eye.
 // Audio prompt plays on each new E in selected language.
-// Viewing distance: 40cm (arm's length).
+// Viewing distance: 40cm (elbow bent, closer than arm's length).
 
 import React, { useState, useEffect, useCallback } from 'react';
 import {
@@ -22,16 +22,16 @@ import { getDistanceAlert, checkEyeDifference } from '../../engine/alertLogic';
 import { getTestProgress } from '../../engine/symptomRouter';
 import { speakEPrompt, speakFeedback, speakEyePrompt, speakDistance } from '../../audio/speech';
 import { strings } from '../../i18n/strings';
+import { TEST_SIZES } from '../../engine/dpiCalc';
 
-// Map row index to response key for alertLogic
-const ROW_TO_RESPONSE = {
-  6: 'rows_6_7',  // 20/20
-  5: 'rows_6_7',  // 20/30
-  4: 'rows_4_5',  // 20/40
-  3: 'rows_4_5',  // 20/50
-  2: 'rows_1_3',  // 20/70
-  1: 'rows_1_3',  // 20/100
-  0: 'blurry',    // 20/200 — could not even read largest
+// Maps the finest row read (as its 20/D denominator) to the alertLogic response key.
+// 20/40 or better is a pass. Key names are historical, the bands are by acuity.
+const denToResponse = (den) => {
+  if (den == null) return 'blurry';
+  if (den <= 40)   return 'rows_6_7';
+  if (den <= 70)   return 'rows_4_5';
+  if (den <= 100)  return 'rows_1_3';
+  return 'blurry';
 };
 
 const EYES = ['R', 'L'];
@@ -65,42 +65,48 @@ const TestDistanceScreen = ({ navigation, route }) => {
     }
   }, [rowIndex, rotation]);
 
-  const handleDirection = useCallback((tappedRotation) => {
-    const isCorrect = tappedRotation === rotation;
+  const answer = useCallback((isCorrect) => {
+    const rows = TEST_SIZES.snellen;
+    const last = rows.length - 1;
     speakFeedback(isCorrect, language);
     setFeedback(isCorrect ? 'correct' : 'wrong');
 
     setTimeout(() => {
       setFeedback(null);
 
-      if (isCorrect && rowIndex < 6) {
+      if (isCorrect && rowIndex < last) {
         // Correct — move to next smaller row with new random rotation
         setRowIndex(prev => prev + 1);
         setRotation(getRandomRotation());
       } else {
-        // Wrong or reached smallest row — record limit
-        const responseKey = isCorrect ? ROW_TO_RESPONSE[6] : ROW_TO_RESPONSE[Math.max(0, rowIndex - 1)];
-        finishEye(responseKey);
+        // Wrong or reached smallest row — record the finest row passed
+        const passedIndex = isCorrect ? rowIndex : rowIndex - 1;
+        const den = passedIndex >= 0 ? rows[passedIndex].den : null;
+        finishEye({ responseKey: denToResponse(den), acuity: den == null ? null : `20/${den}` });
       }
     }, 600);
   }, [rotation, rowIndex, eyeStep]);
 
-  const finishEye = (responseKey) => {
+  const handleDirection = (tappedRotation) => answer(tappedRotation === rotation);
+
+  const finishEye = ({ responseKey, acuity }) => {
     if (eyeStep === 0) {
-      setResultR(responseKey);
+      setResultR({ responseKey, acuity });
       setEyeStep(1);
       setRowIndex(0);
       setRotation(getRandomRotation());
     } else {
       // Both eyes done
-      const alertR    = getDistanceAlert(resultR);
+      const alertR    = getDistanceAlert(resultR.responseKey);
       const alertL    = getDistanceAlert(responseKey);
       const diffAlert = checkEyeDifference(alertR, alertL);
 
       const testResult = {
         testName:  'distance',
-        responseR: resultR,
+        responseR: resultR.responseKey,
         responseL: responseKey,
+        acuityR: resultR.acuity,
+        acuityL: acuity,
         alertR, alertL, diffAlert,
       };
 
@@ -157,9 +163,17 @@ const TestDistanceScreen = ({ navigation, route }) => {
       <View style={styles.distanceBadge}>
         <Text style={styles.badgeIcon}>📱</Text>
         <Text style={[styles.distanceText, isUrdu && styles.rtl]}>
-          {isUrdu ? 'فون کو بازو کی لمبائی پر رکھیں — ۴۰ سینٹی میٹر' : 'Arm\'s length — 40 cm'}
+          {isUrdu ? 'فون کو آنکھوں سے ۴۰ سینٹی میٹر دور رکھیں — کہنی موڑ لیں' : 'About 40 cm from your eyes — bend your elbow'}
         </Text>
       </View>
+
+      {TEST_SIZES.snellen[TEST_SIZES.snellen.length - 1].den > 20 && (
+        <Text style={[styles.floorNote, isUrdu && styles.rtl]}>
+          {isUrdu
+            ? `اس اسکرین پر سب سے باریک لائن ${TEST_SIZES.snellen[TEST_SIZES.snellen.length - 1].acuity} ہے`
+            : `Finest row this screen can show: ${TEST_SIZES.snellen[TEST_SIZES.snellen.length - 1].acuity}`}
+        </Text>
+      )}
 
       {/* Cover eye badge */}
       <View style={styles.coverBadge}>
@@ -199,9 +213,12 @@ const TestDistanceScreen = ({ navigation, route }) => {
         {/* Middle row */}
         <View style={styles.dirRow}>
           <DirectionBtn rotation={180} isUrdu={isUrdu} onPress={handleDirection} />
-          <View style={styles.dirCenter}>
-            <Text style={styles.dirCenterE}>E</Text>
-          </View>
+          <TouchableOpacity style={styles.dirCenter} onPress={() => answer(false)} activeOpacity={0.7}>
+            <Feather name="eye-off" size={20} color="#854F0B" />
+            <Text style={[styles.cantSeeText, isUrdu && styles.rtl]}>
+              {isUrdu ? 'نظر نہیں آیا' : "Can't see"}
+            </Text>
+          </TouchableOpacity>
           <DirectionBtn rotation={0} isUrdu={isUrdu} onPress={handleDirection} />
         </View>
         {/* Bottom row */}
@@ -263,6 +280,8 @@ const styles = StyleSheet.create({
   badgeIcon:      { fontSize: 16 },
   distanceText:   { fontSize: 13, color: '#1A6FD4', flex: 1, fontWeight: '500' },
 
+  floorNote:      { fontSize: 11, color: '#5A5D63', marginBottom: 6 },
+
   coverBadge:     { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FAEEDA', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 8, marginBottom: 8 },
   coverText:      { fontSize: 13, color: '#854F0B', fontWeight: '600', flex: 1 },
 
@@ -279,8 +298,8 @@ const styles = StyleSheet.create({
   directionGrid:  { alignSelf: 'center', marginVertical: 4 },
   dirRow:         { flexDirection: 'row', alignItems: 'center', gap: 8, marginVertical: 4 },
   dirBlank:       { width: 80, height: 80 },
-  dirCenter:      { width: 80, height: 80, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F5F6F8', borderRadius: 12 },
-  dirCenterE:     { fontSize: 28, fontWeight: '700', color: '#C0C3CA' },
+  dirCenter:      { width: 80, height: 80, alignItems: 'center', justifyContent: 'center', gap: 4, backgroundColor: '#FAEEDA', borderRadius: 12 },
+  cantSeeText:    { fontSize: 11, fontWeight: '600', color: '#854F0B', textAlign: 'center' },
 
   dirBtn: {
     width: 80, height: 80,

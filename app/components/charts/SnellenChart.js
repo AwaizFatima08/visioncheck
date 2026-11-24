@@ -3,7 +3,8 @@
 //
 // Renders a single E at a specified row size and random rotation.
 // Rotation is passed as prop so parent controls and records the correct answer.
-// DPI-calibrated — physically accurate at 40cm viewing distance.
+// Drawn as an exact 5x5 grid (not a font glyph) at the true optotype size for
+// a 40cm viewing distance, using the stored screen calibration.
 //
 // USAGE:
 // <SnellenChart rowIndex={currentRow} rotation={currentRotation} />
@@ -12,6 +13,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import Svg, { Rect } from 'react-native-svg';
 import { TEST_SIZES } from '../../engine/dpiCalc';
 
 // Direction the E faces at each rotation angle
@@ -30,14 +32,15 @@ export const getRandomRotation = () => {
 };
 
 const SnellenChart = ({ rowIndex = 0, rotation = 0 }) => {
-  const row      = TEST_SIZES.snellen[rowIndex];
-  const fontSize = row ? row.heightDp : 30;
+  const rows = TEST_SIZES.snellen;
+  const row  = rows[rowIndex];
+  const size = row ? row.heightDp : 30;
 
   return (
     <View style={styles.container}>
       {/* Row indicator dots */}
       <View style={styles.dotsRow}>
-        {TEST_SIZES.snellen.map((_, i) => (
+        {rows.map((_, i) => (
           <View
             key={i}
             style={[
@@ -51,14 +54,17 @@ const SnellenChart = ({ rowIndex = 0, rotation = 0 }) => {
 
       {/* The E — rotated */}
       <View style={styles.eWrap}>
-        <Text
-          style={[
-            styles.eLetter,
-            { fontSize, transform: [{ rotate: `${rotation}deg` }] },
-          ]}
+        <Svg
+          width={size}
+          height={size}
+          viewBox="0 0 5 5"
+          style={{ transform: [{ rotate: `${rotation}deg` }] }}
         >
-          E
-        </Text>
+          <Rect x="0" y="0" width="1" height="5" fill="#1A1C1E" />
+          <Rect x="0" y="0" width="5" height="1" fill="#1A1C1E" />
+          <Rect x="0" y="2" width="5" height="1" fill="#1A1C1E" />
+          <Rect x="0" y="4" width="5" height="1" fill="#1A1C1E" />
+        </Svg>
       </View>
 
       {/* Acuity label — small, for reference */}
@@ -99,11 +105,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 80,
-  },
-  eLetter: {
-    fontFamily: 'monospace',
-    fontWeight: '700',
-    color: '#1A1C1E',
   },
   acuityLabel: {
     fontSize: 10,

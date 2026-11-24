@@ -10,7 +10,8 @@ import React, { useEffect, useState } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
-import { initDatabase } from './app/database/db';
+import { initDatabase, getSetting } from './app/database/db';
+import { applyCalibration } from './app/engine/dpiCalc';
 import AppNavigator from './app/navigation/AppNavigator';
 
 // Keep splash visible while app initialises
@@ -30,6 +31,8 @@ export default function App() {
     try {
       // initDatabase is now synchronous in SDK 55 (expo-sqlite v15)
       initDatabase();
+      const saved = parseFloat(getSetting('calib_scale'));
+      if (saved > 0) applyCalibration(saved);
     } catch (err) {
       console.error('DB init error:', err);
     } finally {

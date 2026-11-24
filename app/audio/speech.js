@@ -71,7 +71,7 @@ export const speakEyePrompt = (key, language) => {
 
 // ─── Distance prompts ─────────────────────────────────────────────────────────
 export const DISTANCE_PROMPTS = {
-  arm:     { en: 'Hold your phone at arm\'s length, about 40 centimetres away.', ur: 'فون کو بازو کی لمبائی پر رکھیں، تقریباً ۴۰ سینٹی میٹر دور۔' },
+  arm:     { en: 'Hold your phone about 40 centimetres from your eyes. Bend your elbow, closer than arm\'s length.', ur: 'فون کو آنکھوں سے تقریباً ۴۰ سینٹی میٹر دور رکھیں۔ کہنی موڑ لیں، بازو کی لمبائی سے ذرا قریب۔' },
   reading: { en: 'Hold your phone at normal reading distance, about 30 centimetres.', ur: 'فون کو عام پڑھنے کی دوری پر رکھیں، تقریباً ۳۰ سینٹی میٹر۔' },
 };
 

@@ -20,9 +20,9 @@ import { speakPrompt } from '../../audio/speech';
 const EXPLANATIONS = {
   en: {
     distance: {
-      green:  { title: 'Distance vision appears normal',     body: 'You were able to read small letters at arm\'s length. This suggests your distance vision is within normal range.' },
+      green:  { title: 'Distance vision appears normal',     body: 'You were able to read small letters at 40 cm. This suggests your distance vision is within normal range.' },
       yellow: { title: 'Slight difficulty at distance',      body: 'You had some difficulty reading smaller letters. This may suggest mild short-sightedness (myopia). Worth checking with a doctor.' },
-      red:    { title: 'Difficulty seeing at distance',      body: 'You could only read larger letters at arm\'s length. This suggests possible short-sightedness (myopia). Please see an eye doctor.' },
+      red:    { title: 'Difficulty seeing at distance',      body: 'You could only read larger letters at 40 cm. This suggests possible short-sightedness (myopia). Please see an eye doctor.' },
     },
     near: {
       green:  { title: 'Near vision appears normal',         body: 'You were able to read small text at reading distance. Your near vision is within normal range.' },
@@ -52,7 +52,7 @@ const EXPLANATIONS = {
   },
   ur: {
     distance: {
-      green:  { title: 'دور کی نظر معمول کے مطابق ہے',         body: 'آپ نے بازو کی لمبائی پر چھوٹے حروف پڑھ لیے۔ اس سے لگتا ہے کہ آپ کی دور کی نظر ٹھیک ہے۔' },
+      green:  { title: 'دور کی نظر معمول کے مطابق ہے',         body: 'آپ نے ۴۰ سینٹی میٹر پر چھوٹے حروف پڑھ لیے۔ اس سے لگتا ہے کہ آپ کی دور کی نظر ٹھیک ہے۔' },
       yellow: { title: 'دور کی نظر میں معمولی دشواری',          body: 'آپ کو چھوٹے حروف پڑھنے میں کچھ تکلیف ہوئی۔ یہ ہلکی دور کی نظر کمزوری (myopia) کی علامت ہو سکتی ہے۔' },
       red:    { title: 'دور کی نظر میں دشواری',                 body: 'آپ صرف بڑے حروف پڑھ سکے۔ یہ دور کی نظر کمزوری (myopia) کی علامت ہو سکتی ہے۔ براہ کرم آنکھوں کے ڈاکٹر سے ملیں۔' },
     },
@@ -221,12 +221,12 @@ const TestResultScreen = ({ navigation, route }) => {
               {isUrdu ? 'آنکھوں کے مطابق نتائج' : 'Results by eye'}
             </Text>
             <EyeRow
-              label={isUrdu ? '👁 دائیں آنکھ' : '👁 Right Eye'}
+              label={(isUrdu ? '👁 دائیں آنکھ' : '👁 Right Eye') + acuityText(result.acuityR)}
               alertLevel={result.alertR}
               isUrdu={isUrdu}
             />
             <EyeRow
-              label={isUrdu ? '👁 بائیں آنکھ' : '👁 Left Eye'}
+              label={(isUrdu ? '👁 بائیں آنکھ' : '👁 Left Eye') + acuityText(result.acuityL)}
               alertLevel={result.alertL}
               isUrdu={isUrdu}
             />
@@ -289,6 +289,9 @@ const TestResultScreen = ({ navigation, route }) => {
 };
 
 // ─── Eye Row Component ────────────────────────────────────────────────────────
+// Distance test only: undefined = test has no acuity, null = could not read the largest row
+const acuityText = (acuity) => (acuity === undefined ? '' : ` · ${acuity === null ? '<20/200' : acuity}`);
+
 const EyeRow = ({ label, alertLevel, isUrdu }) => {
   const style = ALERT_STYLE[alertLevel] || ALERT_STYLE[ALERT.GREEN];
   return (

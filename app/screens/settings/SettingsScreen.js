@@ -47,6 +47,7 @@ const SettingsScreen = ({ navigation, route }) => {
   const [ageBand,       setAgeBand]       = useState('young');
   const [showAgePicker, setShowAgePicker] = useState(false);
   const [privacyOptions, setPrivacyOptions] = useState(false);
+  const [calibrated,     setCalibrated]     = useState(false);
   const isUrdu = language === 'ur';
   const s      = strings[language];
   const bands  = AGE_BANDS[language] || AGE_BANDS.en;
@@ -55,6 +56,7 @@ const SettingsScreen = ({ navigation, route }) => {
     useCallback(() => {
       loadSettings();
       setPrivacyOptions(isPrivacyOptionsRequired());
+      setCalibrated(!!getSetting('calib_scale'));
     }, [])
   );
 
@@ -177,6 +179,20 @@ const SettingsScreen = ({ navigation, route }) => {
             <View style={styles.settingLeft}>
               <Text style={styles.settingIcon}>📋</Text>
               <Text style={[styles.settingTitle, isUrdu && styles.rtl]}>{isUrdu ? 'اعلان پڑھیں' : 'View disclaimer'}</Text>
+            </View>
+            <Feather name={isUrdu ? 'chevron-left' : 'chevron-right'} size={18} color="#9EA3AB" />
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.settingRow, styles.settingRowBorder]} onPress={() => navigation.navigate('Calibration', { language })} activeOpacity={0.8}>
+            <View style={styles.settingLeft}>
+              <Text style={styles.settingIcon}>📏</Text>
+              <View>
+                <Text style={[styles.settingTitle, isUrdu && styles.rtl]}>{isUrdu ? 'اسکرین کا سائز ناپیں' : 'Calibrate screen size'}</Text>
+                <Text style={[styles.settingDesc, isUrdu && styles.rtl]}>
+                  {calibrated
+                    ? (isUrdu ? 'ناپ محفوظ ہے' : 'Calibrated')
+                    : (isUrdu ? 'درست حروف کے سائز کے لیے ایک بار کریں' : 'Do this once for accurate letter sizes')}
+                </Text>
+              </View>
             </View>
             <Feather name={isUrdu ? 'chevron-left' : 'chevron-right'} size={18} color="#9EA3AB" />
           </TouchableOpacity>

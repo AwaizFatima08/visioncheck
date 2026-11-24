@@ -10,6 +10,7 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView } fr
 import { Feather } from '@expo/vector-icons';
 import * as Speech from 'expo-speech';
 import { strings } from '../../i18n/strings';
+import { getSetting } from '../../database/db';
 
 const speak = (text, lang, onDone) => {
   Speech.stop();
@@ -44,6 +45,7 @@ const PreTestSetupScreen = ({ navigation, route }) => {
   const s      = strings[language];
   const isUrdu = language === 'ur';
   const steps  = SETUP_STEPS[language] || SETUP_STEPS.en;
+  const needsCalibration = !getSetting('calib_scale');
 
   const speakAll = () => {
     const instructions = steps.map(st => st.title + '. ' + st.sub);
@@ -91,6 +93,25 @@ const PreTestSetupScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
 
+        {needsCalibration && (
+          <TouchableOpacity
+            style={styles.calibCard}
+            onPress={() => navigation.navigate('Calibration', { language })}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.stepIcon}>📏</Text>
+            <View style={styles.stepText}>
+              <Text style={[styles.stepTitle, isUrdu && styles.rtl]}>
+                {isUrdu ? 'پہلے اسکرین کا سائز ناپیں (۳۰ سیکنڈ)' : 'Calibrate your screen first (30 seconds)'}
+              </Text>
+              <Text style={[styles.stepSub, isUrdu && styles.rtl]}>
+                {isUrdu ? 'درست حروف کے لیے ایک بینک کارڈ چاہیے' : 'Needs a bank or ID card, for accurate letter sizes'}
+              </Text>
+            </View>
+            <Feather name={isUrdu ? 'chevron-left' : 'chevron-right'} size={18} color="#854F0B" />
+          </TouchableOpacity>
+        )}
+
         {/* Steps */}
         {steps.map((step, i) => (
           <TouchableOpacity
@@ -131,6 +152,7 @@ const PreTestSetupScreen = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
+  calibCard:  { flexDirection:'row', alignItems:'center', gap:10, backgroundColor:'#FAEEDA', borderRadius:12, padding:14, marginBottom:14 },
   safe:       { flex:1, backgroundColor:'#F5F6F8' },
   content:    { padding:20, paddingTop:16 },
   rtl:        { textAlign:'right', writingDirection:'rtl', fontFamily: 'NotoNastaliqUrdu' },

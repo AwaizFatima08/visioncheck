@@ -97,7 +97,7 @@ export const strings = {
     test_color_checks: 'Checks for colour blindness',
 
     // Test instructions
-    instr_arm_length: 'Hold your phone at arm\'s length — about 40 cm away',
+    instr_arm_length: 'Hold your phone about 40 cm from your eyes — bend your elbow',
     instr_reading_dist: 'Hold your phone at normal reading distance — about 30 cm',
     instr_cover_left: 'Cover your LEFT eye with your palm',
     instr_cover_right: 'Cover your RIGHT eye with your palm',
@@ -280,7 +280,7 @@ export const strings = {
     test_color_checks: 'رنگوں کی پہچان کی صلاحیت جانچتا ہے',
 
     // Test instructions
-    instr_arm_length: 'فون کو بازو کی لمبائی پر رکھیں — تقریباً ۴۰ سینٹی میٹر',
+    instr_arm_length: 'فون کو آنکھوں سے تقریباً ۴۰ سینٹی میٹر دور رکھیں — کہنی موڑ لیں',
     instr_reading_dist: 'فون کو عام پڑھنے کی دوری پر رکھیں — تقریباً ۳۰ سینٹی میٹر',
     instr_cover_left: 'بائیں آنکھ کو ہتھیلی سے ڈھانپیں',
     instr_cover_right: 'دائیں آنکھ کو ہتھیلی سے ڈھانپیں',

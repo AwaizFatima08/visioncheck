@@ -39,6 +39,7 @@ import HistoryDetailScreen from '../screens/history/HistoryDetailScreen';
 // ─── Settings screens ─────────────────────────────────────────────────────────
 import SettingsScreen       from '../screens/settings/SettingsScreen';
 import DisclaimerViewScreen from '../screens/settings/DisclaimerViewScreen';
+import CalibrationScreen    from '../screens/settings/CalibrationScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab   = createBottomTabNavigator();
@@ -139,6 +140,7 @@ const AppNavigator = () => {
 
         {/* Settings */}
         <Stack.Screen name="DisclaimerView" component={DisclaimerViewScreen} />
+        <Stack.Screen name="Calibration"    component={CalibrationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
