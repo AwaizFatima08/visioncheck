@@ -5,7 +5,7 @@
 // Audio replay button in header.
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import * as Speech from 'expo-speech';
 import { useFocusEffect } from '@react-navigation/native';
@@ -76,11 +76,12 @@ const HomeScreen = ({ navigation, route }) => {
               <Feather name="volume-2" size={20} color="#1A6FD4" />
             </TouchableOpacity>
             {/* App icon */}
-            <View style={styles.logoWrap}>
-              <Feather name="eye" size={22} color="#1A6FD4" />
-            </View>
+            <Image source={require('../../../assets/app-tile.png')} style={styles.logoWrap} accessibilityLabel="VisionCheck" />
           </View>
         </View>
+
+        {/* Hero */}
+        <Image source={require('../../../assets/hero-banner.png')} style={styles.hero} resizeMode="cover" accessible={false} />
 
         {/* Guest banner */}
         <View style={styles.guestBanner}>
@@ -151,7 +152,8 @@ const styles = StyleSheet.create({
   greeting:       { fontSize:26, fontWeight:'800', color:'#1A1C1E' },
   subtitle:       { fontSize:14, color:'#5A5D63', marginTop:3 },
   iconBtn:        { width:36, height:36, borderRadius:18, backgroundColor:'#E8F1FB', alignItems:'center', justifyContent:'center' },
-  logoWrap:       { width:44, height:44, borderRadius:14, backgroundColor:'#E8F1FB', alignItems:'center', justifyContent:'center' },
+  logoWrap:       { width:44, height:44, borderRadius:14 },
+  hero:           { width:'100%', height:130, borderRadius:16, marginBottom:16 },
   guestBanner:    { flexDirection:'row', alignItems:'flex-start', gap:6, backgroundColor:'#F0F1F3', borderRadius:8, padding:10, marginBottom:16 },
   guestText:      { flex:1, fontSize:12, color:'#5A5D63', lineHeight:17 },
   mainCard:       { flexDirection:'row', alignItems:'center', gap:14, backgroundColor:'#FFFFFF', borderRadius:16, borderWidth:1, borderColor:'#E2E4E8', padding:16, marginVertical:6 },

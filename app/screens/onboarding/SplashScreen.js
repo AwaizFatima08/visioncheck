@@ -2,8 +2,7 @@
 // app/screens/onboarding/SplashScreen.js
 
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, StatusBar } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { View, Text, Image, StyleSheet, StatusBar } from 'react-native';
 import * as Speech from 'expo-speech';
 import { getSetting } from '../../database/db';
 
@@ -27,7 +26,7 @@ const SplashScreen = ({ navigation }) => {
   return (
     <View style={s.container}>
       <StatusBar barStyle="light-content" backgroundColor="#1A6FD4" />
-      <View style={s.iconWrap}><Feather name="eye" size={56} color="#fff" /></View>
+      <Image source={require('../../../assets/logo-eye.png')} style={s.logo} resizeMode="contain" accessibilityLabel="VisionCheck" />
       <Text style={s.appName}>VisionCheck</Text>
       <Text style={s.urduLabel}>نظر کا معائنہ</Text>
       <Text style={s.tagline}>Your personal vision screening tool</Text>
@@ -38,7 +37,7 @@ const SplashScreen = ({ navigation }) => {
 
 const s = StyleSheet.create({
   container: { flex:1, backgroundColor:'#1A6FD4', alignItems:'center', justifyContent:'center', padding:32 },
-  iconWrap:  { width:100, height:100, borderRadius:28, backgroundColor:'rgba(255,255,255,0.18)', alignItems:'center', justifyContent:'center', marginBottom:24 },
+  logo:      { width:150, height:115, marginBottom:24 },
   appName:   { fontSize:34, fontWeight:'800', color:'#fff', letterSpacing:0.5 },
   urduLabel: { fontSize:22, color:'rgba(255,255,255,0.85)', marginTop:6, marginBottom:16, fontFamily:'NotoNastaliqUrdu' },
   tagline:   { fontSize:13, color:'rgba(255,255,255,0.65)', textAlign:'center' },
