@@ -7,10 +7,10 @@ OUT = HERE.parent
 ITEMS = [
  ("03_home", "Check your eyesight at home", "گھر بیٹھے نظر چیک کریں"),
  ("05_symptom_selector", "Tell us what you notice — we pick the tests", "بتائیں کیا محسوس ہو رہا ہے"),
- ("08_test_color", "6 standard eye tests", "آنکھوں کے 6 معیاری ٹیسٹ"),
+ ("08_test_color", "7 standard eye tests", "آنکھوں کے 7 معیاری ٹیسٹ"),
  ("09_final_summary", "Clear result: when to see a doctor", "واضح نتیجہ: ڈاکٹر کب دکھانا ہے"),
  ("13_home_urdu", "Full Urdu, with spoken guidance", "مکمل اردو، آواز کے ساتھ"),
- ("10_history", "100% offline. Nothing leaves your phone", "مکمل آف لائن، سب کچھ آپ کے فون پر"),
+ ("10_history", "Your results stay on your phone", "آپ کے نتائج صرف آپ کے فون پر"),
 ]
 TPL = """<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{{font-family:Nast;src:url('{font}')}}
