@@ -39,6 +39,8 @@ const CalibrationScreen = ({ navigation, route }) => {
     }
     applyCalibration(scale);
     setSaved(true);
+    // Came here from the pre-test screen: go straight back so the tests can start
+    if (route.params?.required) navigation.goBack();
   };
 
   const t = isUrdu

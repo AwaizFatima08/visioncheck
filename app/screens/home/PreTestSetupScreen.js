@@ -72,7 +72,11 @@ const PreTestSetupScreen = ({ navigation, route }) => {
     return queue[0] || 'TestDistance';
   };
 
+  const goCalibrate = () => navigation.navigate('Calibration', { language, required: true });
+
   const proceed = () => {
+    // Letter sizes are only physically right after the card calibration, so it is required once.
+    if (needsCalibration) { goCalibrate(); return; }
     speak(isUrdu ? 'ٹیسٹ شروع ہو رہا ہے۔' : 'Starting tests.', language);
     const firstTest = getFirstTestScreen();
     const queue     = Array.isArray(testQueue) ? testQueue : FULL_CHECK_QUEUE;
@@ -101,13 +105,13 @@ const PreTestSetupScreen = ({ navigation, route }) => {
         {needsCalibration && (
           <TouchableOpacity
             style={styles.calibCard}
-            onPress={() => navigation.navigate('Calibration', { language })}
+            onPress={goCalibrate}
             activeOpacity={0.85}
           >
             <Text style={styles.stepIcon}>📏</Text>
             <View style={styles.stepText}>
               <Text style={[styles.stepTitle, isUrdu && styles.rtl]}>
-                {isUrdu ? 'پہلے اسکرین کا سائز ناپیں (۳۰ سیکنڈ)' : 'Calibrate your screen first (30 seconds)'}
+                {isUrdu ? 'ٹیسٹ سے پہلے اسکرین کا سائز ناپنا ضروری ہے (۳۰ سیکنڈ)' : 'Calibrate your screen before the tests (required, 30 seconds)'}
               </Text>
               <Text style={[styles.stepSub, isUrdu && styles.rtl]}>
                 {isUrdu ? 'درست حروف کے لیے ایک بینک کارڈ چاہیے' : 'Needs a bank or ID card, for accurate letter sizes'}
@@ -148,8 +152,10 @@ const PreTestSetupScreen = ({ navigation, route }) => {
       {/* Bottom bar */}
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.readyBtn} onPress={proceed} activeOpacity={0.85}>
-          <Text style={styles.readyIcon}>▶</Text>
-          <Text style={[styles.readyBtnText, isUrdu && styles.rtl]}>{s.setup_ready}</Text>
+          <Text style={styles.readyIcon}>{needsCalibration ? '📏' : '▶'}</Text>
+          <Text style={[styles.readyBtnText, isUrdu && styles.rtl]}>
+            {needsCalibration ? (isUrdu ? 'پہلے اسکرین ناپیں' : 'Calibrate screen first') : s.setup_ready}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
