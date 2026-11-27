@@ -8,7 +8,7 @@
 // Both handle errors gracefully — user always sees feedback.
 
 import * as Sharing from 'expo-sharing';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { Alert } from 'react-native';
 import { generatePDF } from './pdfGenerator';
 import { ALERT } from '../engine/alertLogic';

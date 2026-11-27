@@ -6,7 +6,7 @@
 // Bilingual: English and Urdu content based on language param.
 
 import * as Print from 'expo-print';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { Asset } from 'expo-asset';
 import { ALERT } from '../engine/alertLogic';
 import { TEST_LABELS, describeDetail } from '../engine/testInfo';
