@@ -5,7 +5,8 @@
 // Audio replay button in header.
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import * as Speech from 'expo-speech';
 import { useFocusEffect } from '@react-navigation/native';
@@ -61,12 +62,12 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
 
         {/* Top bar */}
         <View style={styles.topBar}>
-          <View>
+          <View style={styles.greetingWrap}>
             <Text style={[styles.greeting, isUrdu && styles.rtl]}>{s.home_greeting}</Text>
             <Text style={[styles.subtitle, isUrdu && styles.rtl]}>{s.home_subtitle}</Text>
           </View>
@@ -145,10 +146,11 @@ const HomeScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   safe:           { flex:1, backgroundColor:'#F5F6F8' },
-  content:        { padding:20, paddingTop:52 },
+  content:        { padding:20, paddingTop:16 },
+  greetingWrap:   { flex:1, paddingRight:8 },
   rtl:            { textAlign:'right', writingDirection:'rtl', fontFamily: 'NotoNastaliqUrdu' },
   topBar:         { flexDirection:'row', justifyContent:'space-between', alignItems:'flex-start', marginBottom:16 },
-  topRight:       { flexDirection:'row', alignItems:'center', gap:10 },
+  topRight:       { flexDirection:'row', alignItems:'center', gap:10, flexShrink:0 },
   greeting:       { fontSize:26, fontWeight:'800', color:'#1A1C1E' },
   subtitle:       { fontSize:14, color:'#5A5D63', marginTop:3 },
   iconBtn:        { width:36, height:36, borderRadius:18, backgroundColor:'#E8F1FB', alignItems:'center', justifyContent:'center' },

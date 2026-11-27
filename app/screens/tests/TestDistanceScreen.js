@@ -8,10 +8,8 @@
 // Viewing distance: 40cm (elbow bent, closer than arm's length).
 
 import React, { useState, useEffect } from 'react';
-import {
-  View, Text, TouchableOpacity,
-  StyleSheet, SafeAreaView,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import SnellenChart, {
   getRandomRotation,
@@ -157,7 +155,8 @@ const TestDistanceScreen = ({ navigation, route }) => {
     : 'Which direction is the E pointing?';
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={styles.safeOuter}>
+      <ScrollView contentContainerStyle={styles.safe} showsVerticalScrollIndicator={false}>
 
       {/* Progress bar */}
       <View style={styles.progressRow}>
@@ -270,6 +269,7 @@ const TestDistanceScreen = ({ navigation, route }) => {
         </Text>
       </TouchableOpacity>
 
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -292,7 +292,8 @@ const DirectionBtn = ({ rotation, isUrdu, onPress }) => {
 };
 
 const styles = StyleSheet.create({
-  safe:    { flex: 1, backgroundColor: '#F5F6F8', padding: 16, paddingTop: 20 },
+  safeOuter: { flex: 1, backgroundColor: '#F5F6F8' },
+  safe:    { padding: 16, paddingTop: 20, paddingBottom: 32 },
   rtl:     { textAlign: 'right', writingDirection: 'rtl', fontFamily: 'NotoNastaliqUrdu' },
 
   progressRow:     { flexDirection: 'row', gap: 5, marginBottom: 14 },

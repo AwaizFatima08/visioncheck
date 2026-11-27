@@ -6,7 +6,8 @@
 // Scroll-to-activate agree button — unchanged from Sprint 1.
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import * as Speech from 'expo-speech';
 import { strings } from '../../i18n/strings';
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
   safe:           { flex:1, backgroundColor:'#F5F6F8' },
   rtl:            { textAlign:'right', writingDirection:'rtl', fontFamily: 'NotoNastaliqUrdu' },
   urduBody:       { fontSize:15, lineHeight:28 },
-  header:         { flexDirection:'row', alignItems:'center', gap:10, padding:20, paddingTop:44 },
+  header:         { flexDirection:'row', alignItems:'center', gap:10, padding:20, paddingTop:16 },
   title:          { fontSize:20, fontWeight:'700', color:'#1A1C1E', flex:1 },
   scroll:         { flex:1, backgroundColor:'#FFFFFF', margin:16, marginTop:4, borderRadius:14, padding:16 },
   body:           { fontSize:14, color:'#5A5D63', lineHeight:22 },

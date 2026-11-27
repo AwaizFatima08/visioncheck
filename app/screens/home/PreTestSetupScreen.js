@@ -5,9 +5,11 @@
 // Each instruction spoken with a short pause between.
 // Replay button speaks all 4 again.
 
-import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 import * as Speech from 'expo-speech';
 import { strings } from '../../i18n/strings';
 import { getSetting } from '../../database/db';
@@ -46,7 +48,9 @@ const PreTestSetupScreen = ({ navigation, route }) => {
   const s      = strings[language];
   const isUrdu = language === 'ur';
   const steps  = SETUP_STEPS[language] || SETUP_STEPS.en;
-  const needsCalibration = !getSetting('calib_scale');
+  // Re-read on focus so the nudge disappears once the user has calibrated
+  const [needsCalibration, setNeedsCalibration] = useState(!getSetting('calib_scale'));
+  useFocusEffect(useCallback(() => { setNeedsCalibration(!getSetting('calib_scale')); }, []));
 
   const speakAll = () => {
     const instructions = steps.map(st => st.title + '. ' + st.sub);

@@ -6,10 +6,8 @@
 // No action required — read-only, back button to return.
 
 import React, { useState, useEffect } from 'react';
-import {
-  View, Text, ScrollView,
-  StyleSheet, SafeAreaView, TouchableOpacity,
-} from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { strings } from '../../i18n/strings';
 import { getSetting } from '../../database/db';

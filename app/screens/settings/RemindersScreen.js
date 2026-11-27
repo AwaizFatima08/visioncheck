@@ -4,7 +4,8 @@
 // Two optional local reminders. Nothing is sent anywhere; the phone schedules them.
 
 import React, { useState } from 'react';
-import { View, Text, Switch, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Linking } from 'react-native';
+import { View, Text, Switch, TouchableOpacity, StyleSheet, ScrollView, Linking } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { setReminder, isEnabled, getExamMonths } from '../../utils/reminders';
 

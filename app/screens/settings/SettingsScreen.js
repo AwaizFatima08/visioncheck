@@ -6,10 +6,8 @@
 // Replay button in header.
 
 import React, { useState, useCallback } from 'react';
-import {
-  View, Text, TouchableOpacity, ScrollView,
-  StyleSheet, SafeAreaView, Switch, Alert,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Switch, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import * as Speech from 'expo-speech';
 import Constants from 'expo-constants';
@@ -115,7 +113,7 @@ const SettingsScreen = ({ navigation, route }) => {
   const currentBand = bands.find(b => b.key === ageBand) || bands[1];
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
 
         {/* Heading */}

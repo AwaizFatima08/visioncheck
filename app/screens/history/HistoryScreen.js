@@ -6,10 +6,8 @@
 // Pull-to-refresh, clear history, empty state unchanged.
 
 import React, { useState, useCallback } from 'react';
-import {
-  View, Text, TouchableOpacity, FlatList,
-  StyleSheet, SafeAreaView, Alert,
-} from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import * as Speech from 'expo-speech';
 import { useFocusEffect } from '@react-navigation/native';
@@ -129,7 +127,7 @@ const HistoryScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.header}>
         <Text style={[styles.heading, isUrdu && styles.rtl]}>{isUrdu ? 'پچھلے معائنے' : 'Past Assessments'}</Text>
         <View style={styles.headerRight}>

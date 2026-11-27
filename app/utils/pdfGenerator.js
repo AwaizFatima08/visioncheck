@@ -76,23 +76,20 @@ const buildTestRows = (assessmentResults, language) => {
     const tName = labels[testName] || testName;
 
     let eyeRows = '';
-    if (result.alertR) {
-      const rcs = ALERT_CSS[result.alertR];
-      const lcs = ALERT_CSS[result.alertL];
-      eyeRows = `
+    // A test can stop after the first eye (urgent Amsler result), so either eye may be missing.
+    const eyeRow = (eyeLabel, alert) => {
+      const ecs = ALERT_CSS[alert];
+      if (!ecs) return '';
+      return `
         <div class="eye-row">
-          <span>${isUrdu ? '👁 دائیں آنکھ' : '👁 Right Eye'}</span>
-          <span class="pill" style="background:${rcs.bg};color:${rcs.text};border:1px solid ${rcs.border}">
-            ${rcs.label[language] || rcs.label.en}
-          </span>
-        </div>
-        <div class="eye-row">
-          <span>${isUrdu ? '👁 بائیں آنکھ' : '👁 Left Eye'}</span>
-          <span class="pill" style="background:${lcs.bg};color:${lcs.text};border:1px solid ${lcs.border}">
-            ${lcs.label[language] || lcs.label.en}
+          <span>${eyeLabel}</span>
+          <span class="pill" style="background:${ecs.bg};color:${ecs.text};border:1px solid ${ecs.border}">
+            ${ecs.label[language] || ecs.label.en}
           </span>
         </div>`;
-    }
+    };
+    eyeRows = eyeRow(isUrdu ? '👁 دائیں آنکھ' : '👁 Right Eye', result.alertR)
+            + eyeRow(isUrdu ? '👁 بائیں آنکھ' : '👁 Left Eye',  result.alertL);
 
     if (result.eye === 'both') {
       eyeRows = `<div class="eye-row"><span>${isUrdu ? 'دونوں آنکھیں' : 'Both eyes'}</span></div>`;

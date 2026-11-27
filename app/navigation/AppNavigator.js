@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // ─── Onboarding screens ───────────────────────────────────────────────────────
 import SplashScreen         from '../screens/onboarding/SplashScreen';
@@ -52,6 +53,7 @@ const Tab   = createBottomTabNavigator();
 const MainTabs = ({ route }) => {
   const language = route.params?.language || 'en';
   const isUrdu   = language === 'ur';
+  const insets   = useSafeAreaInsets();
 
   return (
     <Tab.Navigator
@@ -61,9 +63,9 @@ const MainTabs = ({ route }) => {
         tabBarInactiveTintColor: '#9EA3AB',
         tabBarStyle: {
           borderTopColor: '#E2E4E8',
-          paddingBottom:  6,
+          paddingBottom:  6 + insets.bottom,
           paddingTop:     6,
-          height:         60,
+          height:         60 + insets.bottom,
         },
         tabBarLabelStyle: { fontSize: 12 },
       }}

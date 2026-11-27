@@ -7,10 +7,8 @@
 // Bilingual — English and Urdu.
 
 import React, { useEffect } from 'react';
-import {
-  View, Text, TouchableOpacity,
-  ScrollView, StyleSheet, SafeAreaView,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { ALERT, ALERT_STYLE } from '../../engine/alertLogic';
 import { getNextTest, getTestProgress } from '../../engine/symptomRouter';

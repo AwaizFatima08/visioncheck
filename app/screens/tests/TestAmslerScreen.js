@@ -6,9 +6,8 @@
 // Viewing distance: 30cm.
 
 import React, { useState } from 'react';
-import {
-  View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import AmslerGrid from '../../components/charts/AmslerGrid';
 import { getAmslerAlert, ALERT, checkEyeDifference } from '../../engine/alertLogic';

@@ -6,7 +6,8 @@
 // 85.6 x 54 mm) to a drawn gap and we store the correction factor.
 
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { setSetting } from '../../database/db';
 import { applyCalibration, getCalibrationScale } from '../../engine/dpiCalc';
@@ -74,10 +75,14 @@ const CalibrationScreen = ({ navigation, route }) => {
         <Text style={[styles.why, isUrdu && styles.rtl]}>{t.why}</Text>
 
         <View style={styles.controls}>
-          <Step label="−2%"   onPress={() => adjust(-0.02)} />
+          <Step label="−10%" onPress={() => adjust(-0.1)} />
+          <Step label="−2%"  onPress={() => adjust(-0.02)} />
+          <Step label="+2%"  onPress={() => adjust(0.02)} />
+          <Step label="+10%" onPress={() => adjust(0.1)} />
+        </View>
+        <View style={styles.controls}>
           <Step label="−0.5%" onPress={() => adjust(-0.005)} />
           <Step label="+0.5%" onPress={() => adjust(0.005)} />
-          <Step label="+2%"   onPress={() => adjust(0.02)} />
         </View>
         <Text style={[styles.readout, isUrdu && styles.rtl]}>
           {t.adj}: {Number(percent) > 0 ? '+' : ''}{percent}%

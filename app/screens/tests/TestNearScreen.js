@@ -7,10 +7,8 @@
 // Viewing distance: 30cm.
 
 import React, { useState, useEffect } from 'react';
-import {
-  View, Text, TouchableOpacity,
-  ScrollView, StyleSheet, SafeAreaView,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import NearVisionChart from '../../components/charts/NearVisionChart';
 import { getNearAlert, checkEyeDifference } from '../../engine/alertLogic';

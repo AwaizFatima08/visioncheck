@@ -7,9 +7,8 @@
 // is classified in engine/colorVision.js.
 
 import React, { useState, useMemo } from 'react';
-import {
-  View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import ColorPlate, { COLOR_PLATES } from '../../components/charts/ColorPlate';
 import { classifyColorVision } from '../../engine/colorVision';

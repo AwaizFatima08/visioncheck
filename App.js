@@ -7,7 +7,8 @@
 // - Added loading guard before rendering navigator
 
 import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, StatusBar } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { initDatabase, getSetting } from './app/database/db';
@@ -54,7 +55,12 @@ export default function App() {
     );
   }
 
-  return <AppNavigator />;
+  return (
+    <SafeAreaProvider>
+      <StatusBar barStyle="dark-content" />
+      <AppNavigator />
+    </SafeAreaProvider>
+  );
 }
 
 const styles = StyleSheet.create({

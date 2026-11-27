@@ -5,7 +5,8 @@
 // Answers stay on the phone (settings table). General guidance only.
 
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { computeRisk } from '../../engine/riskLogic';
 import { getSetting, setSetting } from '../../database/db';
